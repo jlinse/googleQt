@@ -12,7 +12,7 @@ namespace googleQt
 {
     class Endpoint;
     
-    class GdriveRoutes{ 
+    class GOOGLEQT_DLLSPEC GdriveRoutes{
     public:
 
         GdriveRoutes(Endpoint*);

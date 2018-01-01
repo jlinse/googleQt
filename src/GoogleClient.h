@@ -4,6 +4,7 @@
 #include "google/endpoint/ApiClient.h"
 #include "google/endpoint/GoogleTask.h"
 
+
 namespace googleQt{
     class Endpoint;
     class GmailRoutes;
@@ -11,7 +12,7 @@ namespace googleQt{
     class GdriveRoutes;
     class GcontactRoutes;
 
-class GoogleClient: public googleQt::ApiClient{
+class GOOGLEQT_DLLSPEC GoogleClient: public googleQt::ApiClient{
     Q_OBJECT
 public:
     GoogleClient(googleQt::ApiAppInfo* appInfo, googleQt::ApiAuthInfo* authInfo);

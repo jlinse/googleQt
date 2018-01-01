@@ -1,6 +1,7 @@
 QT       += network xml sql
 QT       -= gui
-CONFIG += staticlib
+#CONFIG += staticlib
+DEFINES += GOOGLEQT_DLL
 CONFIG -= flat
 TEMPLATE = lib
 

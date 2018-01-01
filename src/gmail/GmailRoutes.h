@@ -26,7 +26,7 @@ namespace googleQt{
         class GMailCache;
     };  
 
-    class GmailRoutes{
+    class GOOGLEQT_DLLSPEC GmailRoutes{
     public:
         GmailRoutes(Endpoint*);
 

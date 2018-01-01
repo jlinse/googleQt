@@ -48,11 +48,12 @@ namespace googleQt{
         protected:
             ApiEndpoint& m_ep;            
         };
-        
-        using FINISHED_REQ = std::function<void(std::shared_ptr<requester>,
+       public:
+        using FINISHED_REQ = std::function< void(std::shared_ptr<requester>,
             QNetworkRequest,
             QNetworkReply *,
-            int)>;
+            int) >;
+       protected:
 
         typedef std::map<QNetworkReply*, std::shared_ptr<FINISHED_REQ>> NET_REPLIES_IN_PROGRESS;
 

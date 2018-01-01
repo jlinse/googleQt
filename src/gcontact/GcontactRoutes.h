@@ -4,12 +4,11 @@
 
 #include "gcontact/contacts/ContactsRoutes.h"
 
-
 namespace googleQt
 {
     class Endpoint;
 
-    class GcontactRoutes {
+    class GOOGLEQT_DLLSPEC GcontactRoutes {
     public:
 
         GcontactRoutes(Endpoint*);

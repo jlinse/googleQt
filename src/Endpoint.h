@@ -16,7 +16,7 @@
 #endif
 
 namespace googleQt{
-    class Endpoint: public googleQt::ApiEndpoint
+    class GOOGLEQT_DLLSPEC Endpoint: public googleQt::ApiEndpoint
     {
     public:
         Endpoint(googleQt::ApiClient* c);       
