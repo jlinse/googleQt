@@ -10,7 +10,6 @@ moc_*.h
 *.sqlite
 *.DS_Store
 res.txt
-
 autotest/autotest
 examples/authorize/authorize
 examples/authorize/scope-auth-url.info
@@ -25,3 +24,4 @@ examples/gmailbash/data/
 examples/gmailbash/download
 examples/gdrivebash/downloads/
 examples/gcontactbash/download/
+build-*
