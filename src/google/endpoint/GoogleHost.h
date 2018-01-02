@@ -4,7 +4,7 @@
 
 namespace googleQt{
     
-    class GoogleHost
+    class GOOGLEQT_DLLSPEC GoogleHost
     {
     public:
         

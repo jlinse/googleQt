@@ -1,9 +1,10 @@
 #pragma once
 
 #include <QString>
+#include "GoogleExportMacro.h"
 
 namespace googleQt{
-    class ApiAppInfo
+    class GOOGLEQT_DLLSPEC ApiAppInfo
     {
     public:
         ApiAppInfo();

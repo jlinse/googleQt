@@ -14,7 +14,7 @@
 #define TIMES_TO_REFRESH_TOKEN_BEFORE_GIVEUP 2
 
 namespace googleQt{
-    class ApiEndpoint
+    class GOOGLEQT_DLLSPEC ApiEndpoint
     {
     public:
         ApiEndpoint(ApiClient* c);

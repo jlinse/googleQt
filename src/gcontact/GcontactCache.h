@@ -10,7 +10,7 @@ namespace googleQt {
         /**
            basic xml parsing product, can be invalid
          */
-        class ContactInfoPart 
+        class GOOGLEQT_DLLSPEC ContactInfoPart
         {
         public:
             operator bool()const { return !m_is_null; }
@@ -23,7 +23,7 @@ namespace googleQt {
         /**
            name - full, given, family
          */
-        class NameInfo: public ContactInfoPart
+        class GOOGLEQT_DLLSPEC NameInfo: public ContactInfoPart
         {    
         public:
 
@@ -45,7 +45,7 @@ namespace googleQt {
         /**
             organization details - name, title
         */
-        class OrganizationInfo : public ContactInfoPart
+        class GOOGLEQT_DLLSPEC OrganizationInfo : public ContactInfoPart
         {
         public:
             QString name()const { return m_name; }
@@ -63,7 +63,7 @@ namespace googleQt {
         /**
             single phone details
         */
-        class PhoneInfo : public ContactInfoPart
+        class GOOGLEQT_DLLSPEC PhoneInfo : public ContactInfoPart
         {
         public:
 
@@ -86,7 +86,7 @@ namespace googleQt {
         /**
         single email details
         */
-        class EmailInfo : public ContactInfoPart
+        class GOOGLEQT_DLLSPEC EmailInfo : public ContactInfoPart
         {
         public:
 
@@ -109,7 +109,7 @@ namespace googleQt {
         /**
         list of emails
         */
-        class EmailInfoList : public ContactInfoPart
+        class GOOGLEQT_DLLSPEC EmailInfoList : public ContactInfoPart
         {
         public:
             using EMAILS_ARR = std::vector<EmailInfo>;
@@ -125,7 +125,7 @@ namespace googleQt {
         /**
             list of phones
         */
-        class PhoneInfoList : public ContactInfoPart
+        class GOOGLEQT_DLLSPEC PhoneInfoList : public ContactInfoPart
         {
         public:
             using PHONES_ARR = std::vector<PhoneInfo>;
@@ -141,7 +141,7 @@ namespace googleQt {
         /**
             single contact entry
         */
-        class ContactInfo : public ContactInfoPart
+        class GOOGLEQT_DLLSPEC ContactInfo : public ContactInfoPart
         {
         public:
 
@@ -173,7 +173,7 @@ namespace googleQt {
         /**
             list of all contacts
         */
-        class ContactList
+        class GOOGLEQT_DLLSPEC ContactList
         {
         public:
             using CONTACTS_ARR = std::vector<ContactInfo>;

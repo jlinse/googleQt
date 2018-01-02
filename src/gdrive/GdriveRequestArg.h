@@ -17,7 +17,7 @@ namespace googleQt {
         DECLARE_PATH_CLASS(about);
         DECLARE_PATH_CLASS(trash);
 
-        class AboutArg : public PathArg<path_about, AboutArg>
+        class GOOGLEQT_DLLSPEC AboutArg : public PathArg<path_about, AboutArg>
         {
         public:
             AboutArg();
@@ -28,7 +28,7 @@ namespace googleQt {
             QString m_Fields;
         };
 
-        class FileListArg : public QParamArg
+        class GOOGLEQT_DLLSPEC FileListArg : public QParamArg
         {
         public:
             FileListArg(QString pageToken = "");
@@ -97,7 +97,7 @@ namespace googleQt {
             QString m_spaces;
         };
 
-        class GetFileArg : public QParamArg
+        class GOOGLEQT_DLLSPEC GetFileArg : public QParamArg
         {
         public:
             GetFileArg(QString fileId = "");
@@ -126,7 +126,7 @@ namespace googleQt {
         };//FileIdArg
 
 
-        class RenameFileArg : public QParamArgWithBody<RenameFileArg>
+        class GOOGLEQT_DLLSPEC RenameFileArg : public QParamArgWithBody<RenameFileArg>
         {
         public:
             RenameFileArg(QString fileId = "");
@@ -155,7 +155,7 @@ namespace googleQt {
             QString m_name;
         };
 
-        class MoveFileArg : public QParamArgWithBody<MoveFileArg>
+        class GOOGLEQT_DLLSPEC MoveFileArg : public QParamArgWithBody<MoveFileArg>
         {
         public:
             MoveFileArg(QString fileId = "");
@@ -197,7 +197,7 @@ namespace googleQt {
             std::list<QString> m_addParents, m_removeParents;
         };
 
-        class DownloadFileArg : public QParamArg
+        class GOOGLEQT_DLLSPEC DownloadFileArg : public QParamArg
         {
         public:
             DownloadFileArg(QString fileId = "");
@@ -217,7 +217,7 @@ namespace googleQt {
             QString m_fileId;
         };      
 
-        class CopyFileArg : public QParamArg
+        class GOOGLEQT_DLLSPEC CopyFileArg : public QParamArg
         {
         public:
             CopyFileArg();
@@ -263,7 +263,7 @@ namespace googleQt {
             QString m_ocrLanguage;
         };//CopyFileArg
 
-        class DeleteFileArg: public QParamArg
+        class GOOGLEQT_DLLSPEC DeleteFileArg: public QParamArg
         {
         public:
             DeleteFileArg(QString fileId = "");
@@ -283,7 +283,7 @@ namespace googleQt {
             QString m_fileId;
         };
 
-        class CreateFileArg : public QParamArgWithBody<CreateFileArg>
+        class GOOGLEQT_DLLSPEC CreateFileArg : public QParamArgWithBody<CreateFileArg>
         {
         public:
             CreateFileArg(QString name = "");
@@ -342,7 +342,7 @@ namespace googleQt {
             std::unique_ptr<files::CreateFileDetails> m_create_file;
         };
 
-        class UpdateFileArg : public QParamArgWithBody<UpdateFileArg>
+        class GOOGLEQT_DLLSPEC UpdateFileArg : public QParamArgWithBody<UpdateFileArg>
         {
         public:
             UpdateFileArg(QString fileId = "");
@@ -385,7 +385,7 @@ namespace googleQt {
             std::unique_ptr<files::UpdateFileDetails> m_update_file;
         };
         
-        class CreateFolderArg : public QParamArgWithBody<CreateFolderArg>
+        class GOOGLEQT_DLLSPEC CreateFolderArg : public QParamArgWithBody<CreateFolderArg>
         {
         public:
             CreateFolderArg(QString name = "");
@@ -423,13 +423,13 @@ namespace googleQt {
             std::list <QString> m_parents;            
         };
         
-        class EmptyTrashArg: public PathArg<path_trash, EmptyTrashArg>
+        class GOOGLEQT_DLLSPEC EmptyTrashArg: public PathArg<path_trash, EmptyTrashArg>
         {
         public:
 
         };//EmptyTrashArg
         
-        class PermissionArg : public QParamArg
+        class GOOGLEQT_DLLSPEC PermissionArg : public QParamArg
         {
         public:
             PermissionArg();
@@ -457,7 +457,7 @@ namespace googleQt {
             QString m_permissionId;
         };
 
-        class CreatePermissionArg : public QParamArg
+        class GOOGLEQT_DLLSPEC CreatePermissionArg : public QParamArg
         {
         public:
             CreatePermissionArg();
@@ -502,7 +502,7 @@ namespace googleQt {
             bool    m_transferOwnership;
         };
 
-        class PermissionListArg : public QParamArg
+        class GOOGLEQT_DLLSPEC PermissionListArg : public QParamArg
         {
         public:
             PermissionListArg(QString fileId = "");
@@ -523,7 +523,7 @@ namespace googleQt {
         };
 
         
-        class CreateCommentArg : public QParamArg
+        class GOOGLEQT_DLLSPEC CreateCommentArg : public QParamArg
         {
         public:
             CreateCommentArg();
@@ -544,7 +544,7 @@ namespace googleQt {
             QString m_fileId;
         };
         
-        class DeleteCommentArg : public QParamArg
+        class GOOGLEQT_DLLSPEC DeleteCommentArg : public QParamArg
         {
         public:
             DeleteCommentArg();
@@ -573,7 +573,7 @@ namespace googleQt {
         };
 
         
-        class GetCommentArg : public QParamArg
+        class GOOGLEQT_DLLSPEC GetCommentArg : public QParamArg
         {
         public:
             GetCommentArg();
@@ -608,7 +608,7 @@ namespace googleQt {
             bool m_includeDeleted;
         };
         
-        class CommentListArg : public QParamArg
+        class GOOGLEQT_DLLSPEC CommentListArg : public QParamArg
         {
         public:
             CommentListArg(QString fileId = "");
@@ -658,7 +658,7 @@ namespace googleQt {
             QDateTime m_startModifiedTime;
         };
 
-        class GenerateIdArg : public QParamArg
+        class GOOGLEQT_DLLSPEC GenerateIdArg : public QParamArg
         {
         public:
             GenerateIdArg(QString space = "drive");
@@ -685,7 +685,7 @@ namespace googleQt {
             int     m_count;
         };//GenerateIdArg
 
-        class GetRevisionArg : public QParamArg
+        class GOOGLEQT_DLLSPEC GetRevisionArg : public QParamArg
         {
         public:
             GetRevisionArg(QString fileId = "", QString revisionId = "");
@@ -720,7 +720,7 @@ namespace googleQt {
             bool    m_acknowledgeAbuse;
         };//GetRevisionArg
 
-        class DeleteRevisionArg : public QParamArg
+        class GOOGLEQT_DLLSPEC DeleteRevisionArg : public QParamArg
         {
         public:
             DeleteRevisionArg(QString fileId = "", QString revisionId = "");
@@ -748,7 +748,7 @@ namespace googleQt {
         };//DeleteRevisionArg
 
 
-        class ListRevisionArg : public QParamArg
+        class GOOGLEQT_DLLSPEC ListRevisionArg : public QParamArg
         {
         public:
             ListRevisionArg(QString fileId = "", QString pageToken = "");
@@ -785,7 +785,7 @@ namespace googleQt {
         };
 
 
-        class UpdateRevisionArg : public QParamArgWithBody<UpdateRevisionArg>
+        class GOOGLEQT_DLLSPEC UpdateRevisionArg : public QParamArgWithBody<UpdateRevisionArg>
         {
         public:
             UpdateRevisionArg(QString fileId = "", QString revisionId = "");

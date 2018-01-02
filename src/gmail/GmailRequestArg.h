@@ -12,7 +12,7 @@ namespace googleQt{
         DECLARE_PATH_CLASS(insert);
         DECLARE_PATH_CLASS(batchDelete);
 
-        class ListArg: public QParamArg
+        class GOOGLEQT_DLLSPEC ListArg: public QParamArg
         {
         public:
             ListArg();
@@ -67,7 +67,7 @@ namespace googleQt{
             QString     m_q;
         };
         
-        class HistoryListArg : public QParamArg
+        class GOOGLEQT_DLLSPEC HistoryListArg : public QParamArg
         {
         public:
             HistoryListArg(QString userId, int startHistoryId = 0);
@@ -119,7 +119,7 @@ namespace googleQt{
             uint16_t    m_startHistoryId;
         };
         
-        class DraftListArg : public QParamArg 
+        class GOOGLEQT_DLLSPEC DraftListArg : public QParamArg
         {
         public:
             DraftListArg();
@@ -168,7 +168,7 @@ namespace googleQt{
         };
 
 
-        class IdArg : public QParamArg
+        class GOOGLEQT_DLLSPEC IdArg : public QParamArg
         {
         public:
             IdArg(){};
@@ -209,7 +209,7 @@ namespace googleQt{
             QStringList m_headers;
         };       
 
-        class AttachmentIdArg : public QParamArg
+        class GOOGLEQT_DLLSPEC AttachmentIdArg : public QParamArg
         {
         public:
             AttachmentIdArg() {};
@@ -238,7 +238,7 @@ namespace googleQt{
         };
 
 
-        class ModifyMessageArg: public QParamArgWithBody<ModifyMessageArg>
+        class GOOGLEQT_DLLSPEC ModifyMessageArg: public QParamArgWithBody<ModifyMessageArg>
         {
         public:
             ModifyMessageArg() {};
@@ -275,7 +275,7 @@ namespace googleQt{
 
         };
     
-        class MimeBodyPart 
+        class GOOGLEQT_DLLSPEC MimeBodyPart
         {
             friend class SendMimeMessageArg;
         public:
@@ -300,7 +300,7 @@ namespace googleQt{
             EType   m_part_type{ ptypeNone };
         };
 
-        class SendMimeMessageArg : public QParamArgWithBody<SendMimeMessageArg>
+        class GOOGLEQT_DLLSPEC SendMimeMessageArg : public QParamArgWithBody<SendMimeMessageArg>
         {
         public:
             SendMimeMessageArg();
@@ -367,7 +367,7 @@ namespace googleQt{
             std::list<MimeBodyPart> m_body_parts;
         };
 
-        class InsertMessageArg : public PathArg<path_insert, InsertMessageArg>
+        class GOOGLEQT_DLLSPEC InsertMessageArg : public PathArg<path_insert, InsertMessageArg>
         {
         public:
             InsertMessageArg();
@@ -409,7 +409,7 @@ namespace googleQt{
             QString m_internalDateSource;
         };
 
-        class TrashMessageArg: public PathWithIdArg<path_trash, TrashMessageArg>
+        class GOOGLEQT_DLLSPEC  TrashMessageArg: public PathWithIdArg<path_trash, TrashMessageArg>
         {
         public:
             TrashMessageArg(QString user_id, QString idValue) { m_userId = user_id; m_id = idValue; }
@@ -424,7 +424,7 @@ namespace googleQt{
             QString m_userId;
         };
 
-        class UntrashMessageArg: public PathWithIdArg<path_untrash, UntrashMessageArg>
+        class GOOGLEQT_DLLSPEC UntrashMessageArg: public PathWithIdArg<path_untrash, UntrashMessageArg>
         {
         public:
             UntrashMessageArg(QString user_id, QString idValue){ m_userId = user_id; m_id = idValue;}
@@ -439,7 +439,7 @@ namespace googleQt{
             QString m_userId;
         };
 
-        class ImportMessageArg: public PathArg<path_import, ImportMessageArg>
+        class GOOGLEQT_DLLSPEC ImportMessageArg: public PathArg<path_import, ImportMessageArg>
         {
         public:
             ImportMessageArg();
@@ -497,7 +497,7 @@ namespace googleQt{
             bool    m_processForCalendar;
         };
 
-        class BatchDeleteMessageArg: public PathArg<path_batchDelete, BatchDeleteMessageArg>
+        class GOOGLEQT_DLLSPEC BatchDeleteMessageArg: public PathArg<path_batchDelete, BatchDeleteMessageArg>
         {
         };
 

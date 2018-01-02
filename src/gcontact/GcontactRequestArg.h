@@ -10,7 +10,7 @@ namespace googleQt {
         /**
             argument class for contacts queries
         */
-        class ContactsListArg : public QParamArg
+        class GOOGLEQT_DLLSPEC ContactsListArg : public QParamArg
         {
         public:
             ContactsListArg();
@@ -58,7 +58,7 @@ namespace googleQt {
         /**
         argument class for creating contact
         */
-        class CreateContactArg : public QParamArg
+        class GOOGLEQT_DLLSPEC CreateContactArg : public QParamArg
         {
         public:
 
@@ -76,7 +76,7 @@ namespace googleQt {
         /**
             result of contacts queries, can contain one entry if ContactsListArg was used with contactId
         */
-        class ContactsListResult 
+        class GOOGLEQT_DLLSPEC ContactsListResult
         {
         public:
             ContactsListResult(const QByteArray& data);

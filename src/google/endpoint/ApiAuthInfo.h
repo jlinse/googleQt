@@ -1,8 +1,9 @@
 #pragma once
 #include <QString>
+#include "GoogleExportMacro.h"
 
 namespace googleQt{
-    class ApiAuthInfo
+    class GOOGLEQT_DLLSPEC ApiAuthInfo
     {
         friend class GoogleWebAuth;
     public:

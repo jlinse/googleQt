@@ -4,12 +4,13 @@
 #include <functional>
 #include <QObject>
 #include "ApiException.h"
+#include "GoogleExportMacro.h"
 
 namespace googleQt{
     class ApiEndpoint;
     class Endpoint;
 
-    class EndpointRunnable : public QObject
+    class GOOGLEQT_DLLSPEC EndpointRunnable : public QObject
     {
         Q_OBJECT;
     public:
@@ -38,7 +39,7 @@ namespace googleQt{
 
 
     template <class RESULT>
-    class GoogleTask : public EndpointRunnable
+    class GOOGLEQT_DLLSPEC GoogleTask : public EndpointRunnable
     {
         friend class Endpoint;
     public:
@@ -128,7 +129,7 @@ namespace googleQt{
         std::unique_ptr<RESULT> m_completed;
     };
 
-    class GoogleVoidTask : public EndpointRunnable
+    class GOOGLEQT_DLLSPEC GoogleVoidTask : public EndpointRunnable
     {
         friend class Endpoint;
     public:

@@ -6,9 +6,10 @@
 #include <QByteArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include "GoogleExportMacro.h"
 
 namespace googleQt{
-  class GoogleException: public std::exception
+  class GOOGLEQT_DLLSPEC GoogleException: public std::exception
   {
   public:
     explicit GoogleException(const std::string& message) :m_msg(message), m_status_code(0){}

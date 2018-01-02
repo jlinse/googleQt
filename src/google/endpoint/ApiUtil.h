@@ -16,9 +16,12 @@
 #include <QUrlQuery>
 #include "ApiException.h"
 #include "GoogleTask.h"
+#include "GoogleExportMacro.h"
 #ifdef API_QT_AUTOTEST
 #include "ApiAutotest.h"
 #endif
+
+
 
 namespace googleQt {
 

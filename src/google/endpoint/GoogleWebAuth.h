@@ -7,7 +7,7 @@
 namespace googleQt{
     class GoogleAppInfo;
 
-    class GoogleWebAuth
+    class GOOGLEQT_DLLSPEC GoogleWebAuth
     {
     public:
         /**

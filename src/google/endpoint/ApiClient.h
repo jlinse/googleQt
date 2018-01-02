@@ -2,17 +2,12 @@
 #include "ApiUtil.h"
 #include "ApiAuthInfo.h"
 #include "ApiAppInfo.h"
+#include "GoogleExportMacro.h"
 
 class QNetworkProxy;
 
-#if defined GOOGLEQT_DLL
- #define GOOGLEQT_DLLSPEC Q_DECL_EXPORT
-#else
- #define GOOGLEQT_DLLSPEC Q_DECL_IMPORT
-#endif
-
 namespace googleQt{
-    class ApiClient: public QObject{
+    class GOOGLEQT_DLLSPEC ApiClient: public QObject{
         Q_OBJECT
     public:
         ApiClient(ApiAppInfo* appInfo, ApiAuthInfo* authInfo);

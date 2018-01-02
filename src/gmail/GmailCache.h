@@ -38,7 +38,7 @@ namespace googleQt{
            later dynamically restored from Gmail using ID.
            Containes labels as bitmap.
         */
-        class MessageData : public CacheData
+        class GOOGLEQT_DLLSPEC MessageData : public CacheData
         {
         public:
             MessageData(int accId,
@@ -141,7 +141,7 @@ namespace googleQt{
            actual data only details on it and possible 
            reference to local file name
         */
-        class AttachmentData
+        class GOOGLEQT_DLLSPEC AttachmentData
         {
         public:
             enum EStatus {
@@ -211,7 +211,7 @@ namespace googleQt{
            LabelData - system/user labels in gmail, implemented as bitmap,
            where one reference to the label is one bit in 64bit map
         */
-        class LabelData 
+        class GOOGLEQT_DLLSPEC LabelData
         {
         public:
             LabelData();
@@ -251,7 +251,7 @@ namespace googleQt{
             friend class GMailSQLiteStorage;
         };
 
-        class AccountData 
+        class GOOGLEQT_DLLSPEC AccountData
         {
         public:
             AccountData(){}
@@ -266,7 +266,7 @@ namespace googleQt{
         };
 
         class GMailCache;
-        class GMailCacheQueryTask: public CacheQueryTask<MessageData>
+        class GOOGLEQT_DLLSPEC GMailCacheQueryTask: public CacheQueryTask<MessageData>
         {
         public:
             GMailCacheQueryTask(QString userId,
@@ -300,7 +300,7 @@ namespace googleQt{
             friend class googleQt::mail_cache::GmailCacheRoutes;
         };
         
-        class GMailCache : public GoogleCache<MessageData, GMailCacheQueryTask>
+        class GOOGLEQT_DLLSPEC GMailCache : public GoogleCache<MessageData, GMailCacheQueryTask>
         {
         public:
             GMailCache(ApiEndpoint& ept);
@@ -318,7 +318,7 @@ namespace googleQt{
            GMailSQLiteStorage - utility class as helper for GMailCache.
            Implements SQL manipulation functions.
         */
-        class GMailSQLiteStorage: public LocalPersistentStorage<MessageData, GMailCacheQueryTask>
+        class GOOGLEQT_DLLSPEC GMailSQLiteStorage: public LocalPersistentStorage<MessageData, GMailCacheQueryTask>
         {
         public:
             GMailSQLiteStorage(cache_ptr c);
@@ -406,7 +406,7 @@ namespace googleQt{
             friend class googleQt::mail_cache::GmailCacheRoutes;
         };//GMailSQLiteStorage
 
-        class MessagesReceiver
+        class GOOGLEQT_DLLSPEC MessagesReceiver
         {
         public:
             MessagesReceiver(GmailRoutes& r, QString userId, EDataState f);

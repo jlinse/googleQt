@@ -20,7 +20,7 @@ namespace googleQt
 {
     namespace mail_cache
     {
-        class GmailCacheRoutes : public QObject
+        class GOOGLEQT_DLLSPEC GmailCacheRoutes : public QObject
         {
             Q_OBJECT
         public:
