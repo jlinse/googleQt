@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "revisions"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -10,7 +12,7 @@
 
 namespace googleQt{
 namespace revisions{
-    class RevisionUser{
+    class GOOGLEQT_DLLSPEC RevisionUser{
         /**
             field: display_name: A plain text displayable name for this user.
             field: kind: Identifies what kind of resource this is. Value: the
@@ -32,6 +34,7 @@ namespace revisions{
         RevisionUser(const QString& arg):
         m_kind("drive#user")
         { m_displayName = arg; };
+        virtual ~RevisionUser(){};
 
     public:
             /**

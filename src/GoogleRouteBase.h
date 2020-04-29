@@ -1,10 +1,10 @@
 #pragma once
-
+#include "GoogleExportMacro.h"
 namespace googleQt{
 
     class Endpoint;
 
-    class GoogleRouteBase
+    class GOOGLEQT_DLLSPEC GoogleRouteBase
     {        
     public:
         GoogleRouteBase(Endpoint* ep):m_end_point(ep){}

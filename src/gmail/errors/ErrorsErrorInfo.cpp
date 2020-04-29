@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "errors"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -67,7 +69,7 @@ std::unique_ptr<ErrorInfo> ErrorInfo::EXAMPLE(int context_index, int parent_cont
     static int example_idx = 0;
     example_idx++;
     std::unique_ptr<ErrorInfo> rv(new ErrorInfo);
-    std::list<errors::ErrorPart> list_of_errors;
+    std::vector<errors::ErrorPart> list_of_errors;
     for(int i = 0; i < 5; i++){
         errors::ErrorPart p = *(errors::ErrorPart::EXAMPLE(i, context_index).get());
         ApiAutotest::INSTANCE().prepareAutoTestObj("errors::ErrorInfo", "errors::ErrorPart", &p, i, context_index);

@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "revisions"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -11,7 +13,7 @@
 
 namespace googleQt{
 namespace revisions{
-    class RevisionResourceCollection{
+    class GOOGLEQT_DLLSPEC RevisionResourceCollection{
         /**
             field: next_page_token: The page token for the next page of
                 revisions. This will be absent if the end of the revisions list
@@ -32,6 +34,7 @@ namespace revisions{
         RevisionResourceCollection(const QString& arg):
         m_kind("drive#revisionList")
         { m_nextPageToken = arg; };
+        virtual ~RevisionResourceCollection(){};
 
     public:
             /**
@@ -54,8 +57,8 @@ namespace revisions{
                 list may be incomplete and an additional page of results should
                 be fetched.
             */
-        const std::list <RevisionResource>& files()const{return m_files;};
-        RevisionResourceCollection& setFiles(const std::list <RevisionResource>& arg){m_files=arg;return *this;};
+        const std::vector<RevisionResource>& files()const{return m_files;};
+        RevisionResourceCollection& setFiles(const std::vector<RevisionResource>& arg){m_files=arg;return *this;};
 
     public:
         operator QJsonObject ()const;
@@ -95,7 +98,7 @@ namespace revisions{
                 list may be incomplete and an additional page of results should
                 be fetched.
             */
-        std::list <RevisionResource> m_files;
+        std::vector<RevisionResource> m_files;
 
     };//RevisionResourceCollection
 

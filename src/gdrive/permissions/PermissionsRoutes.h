@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "permissions"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -16,7 +18,7 @@ namespace googleQt{
 namespace permissions{
 
 
-    class PermissionsRoutes: public GoogleRouteBase{
+    class GOOGLEQT_DLLSPEC PermissionsRoutes: public GoogleRouteBase{
     public:
         PermissionsRoutes(Endpoint* ep):GoogleRouteBase(ep){};
             /**

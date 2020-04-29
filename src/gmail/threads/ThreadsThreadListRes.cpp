@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "threads"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -67,7 +69,7 @@ std::unique_ptr<ThreadListRes> ThreadListRes::EXAMPLE(int context_index, int par
     static int example_idx = 0;
     example_idx++;
     std::unique_ptr<ThreadListRes> rv(new ThreadListRes);
-    std::list<threads::ThreadResource> list_of_threads;
+    std::vector<threads::ThreadResource> list_of_threads;
     for(int i = 0; i < 5; i++){
         threads::ThreadResource p = *(threads::ThreadResource::EXAMPLE(i, context_index).get());
         ApiAutotest::INSTANCE().prepareAutoTestObj("threads::ThreadListRes", "threads::ThreadResource", &p, i, context_index);

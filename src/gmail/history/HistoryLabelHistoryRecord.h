@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "history"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -11,7 +13,7 @@
 
 namespace googleQt{
 namespace history{
-    class LabelHistoryRecord{
+    class GOOGLEQT_DLLSPEC LabelHistoryRecord{
         /**
             field: message: Message resource
             field: label_ids: Labels list
@@ -21,6 +23,7 @@ namespace history{
         LabelHistoryRecord(){};
 
         LabelHistoryRecord(const messages::MessageResource& arg){ m_message = arg; };
+        virtual ~LabelHistoryRecord(){};
 
     public:
             /**
@@ -32,8 +35,8 @@ namespace history{
             /**
                 Labels list
             */
-        const std::list <QString>& labelids()const{return m_labelIds;};
-        LabelHistoryRecord& setLabelids(const std::list <QString>& arg){m_labelIds=arg;return *this;};
+        const std::vector<QString>& labelids()const{return m_labelIds;};
+        LabelHistoryRecord& setLabelids(const std::vector<QString>& arg){m_labelIds=arg;return *this;};
 
     public:
         operator QJsonObject ()const;
@@ -63,7 +66,7 @@ namespace history{
             /**
                 Labels list
             */
-        std::list <QString> m_labelIds;
+        std::vector<QString> m_labelIds;
 
     };//LabelHistoryRecord
 

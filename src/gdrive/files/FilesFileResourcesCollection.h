@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "files"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -11,7 +13,7 @@
 
 namespace googleQt{
 namespace files{
-    class FileResourcesCollection{
+    class GOOGLEQT_DLLSPEC FileResourcesCollection{
         /**
             field: next_page_token: The page token for the next page of files.
                 This will be absent if the end of the files list has been
@@ -28,6 +30,7 @@ namespace files{
         FileResourcesCollection(const QString& arg):
         m_kind("drive#fileList")
         { m_nextPageToken = arg; };
+        virtual ~FileResourcesCollection(){};
 
     public:
             /**
@@ -46,8 +49,8 @@ namespace files{
             /**
                 The page of files.
             */
-        const std::list <FileResource>& files()const{return m_files;};
-        FileResourcesCollection& setFiles(const std::list <FileResource>& arg){m_files=arg;return *this;};
+        const std::vector<FileResource>& files()const{return m_files;};
+        FileResourcesCollection& setFiles(const std::vector<FileResource>& arg){m_files=arg;return *this;};
 
     public:
         operator QJsonObject ()const;
@@ -83,7 +86,7 @@ namespace files{
             /**
                 The page of files.
             */
-        std::list <FileResource> m_files;
+        std::vector<FileResource> m_files;
 
     };//FileResourcesCollection
 

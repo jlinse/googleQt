@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "comments"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -10,7 +12,7 @@
 
 namespace googleQt{
 namespace comments{
-    class User{
+    class GOOGLEQT_DLLSPEC User{
         /**
             field: display_name: A plain text displayable name for this user.
             field: kind: This is always drive#user
@@ -31,6 +33,7 @@ namespace comments{
         User(const QString& arg):
         m_kind("drive#user")
         { m_displayName = arg; };
+        virtual ~User(){};
 
     public:
             /**

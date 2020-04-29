@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "files"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -87,10 +89,12 @@ std::unique_ptr<CreateFileDetails> CreateFileDetails::EXAMPLE(int context_index,
     rv->m_contentHints = *(files::ContentHints::EXAMPLE(0, context_index).get());
     rv->m_name = ApiAutotest::INSTANCE().getString("files::CreateFileDetails", "m_name", QString("name_%1").arg(example_idx));
     rv->m_originalFilename = ApiAutotest::INSTANCE().getString("files::CreateFileDetails", "m_originalFilename", QString("originalFilename_%1").arg(example_idx));
-    std::list<QString> list_of_parents;
+    std::vector<QString> list_of_parents;
     for(int i = 0; i < 5; i++){
         rv->m_parents.push_back(QString("id_%1").arg(i+1));
     }
+    QString tmp_m_parents = ApiAutotest::INSTANCE().getString4List("files::CreateFileDetails", "m_parents");
+    if(!tmp_m_parents.isEmpty())rv->m_parents.push_back(tmp_m_parents);
     return rv;
 }
 #endif //API_QT_AUTOTEST

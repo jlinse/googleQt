@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "tasklists"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -11,7 +13,7 @@
 
 namespace googleQt{
 namespace tasklists{
-    class TaskListCollectionRes{
+    class GOOGLEQT_DLLSPEC TaskListCollectionRes{
         /**
             field: kind: Type of the resource. This is always tasks#taskLists.
             field: etag: ETag of the resource.
@@ -28,6 +30,7 @@ namespace tasklists{
         TaskListCollectionRes(const QString& arg):
         m_kind("tasks#taskLists")
         { m_kind = arg; };
+        virtual ~TaskListCollectionRes(){};
 
     public:
             /**
@@ -51,8 +54,8 @@ namespace tasklists{
             /**
                 Collection of task lists.
             */
-        const std::list <TaskListResource>& items()const{return m_items;};
-        TaskListCollectionRes& setItems(const std::list <TaskListResource>& arg){m_items=arg;return *this;};
+        const std::vector<TaskListResource>& items()const{return m_items;};
+        TaskListCollectionRes& setItems(const std::vector<TaskListResource>& arg){m_items=arg;return *this;};
 
     public:
         operator QJsonObject ()const;
@@ -92,7 +95,7 @@ namespace tasklists{
             /**
                 Collection of task lists.
             */
-        std::list <TaskListResource> m_items;
+        std::vector<TaskListResource> m_items;
 
     };//TaskListCollectionRes
 

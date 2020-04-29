@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "tasks"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -11,7 +13,7 @@
 
 namespace googleQt{
 namespace tasks{
-    class TaskCollectionRes{
+    class GOOGLEQT_DLLSPEC TaskCollectionRes{
         /**
             field: kind: Type of the resource. This is always tasks#tasks.
             field: etag: ETag of the resource.
@@ -28,6 +30,7 @@ namespace tasks{
         TaskCollectionRes(const QString& arg):
         m_kind("tasks#tasks")
         { m_kind = arg; };
+        virtual ~TaskCollectionRes(){};
 
     public:
             /**
@@ -51,8 +54,8 @@ namespace tasks{
             /**
                 Collection of task lists.
             */
-        const std::list <TaskResource>& items()const{return m_items;};
-        TaskCollectionRes& setItems(const std::list <TaskResource>& arg){m_items=arg;return *this;};
+        const std::vector<TaskResource>& items()const{return m_items;};
+        TaskCollectionRes& setItems(const std::vector<TaskResource>& arg){m_items=arg;return *this;};
 
     public:
         operator QJsonObject ()const;
@@ -92,7 +95,7 @@ namespace tasks{
             /**
                 Collection of task lists.
             */
-        std::list <TaskResource> m_items;
+        std::vector<TaskResource> m_items;
 
     };//TaskCollectionRes
 

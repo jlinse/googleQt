@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "users"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -10,7 +12,7 @@
 
 namespace googleQt{
 namespace users{
-    class GetProfileResponse{
+    class GOOGLEQT_DLLSPEC GetProfileResponse{
         /**
             field: email_address: The user's email address.
             field: messages_total: The total number of messages in the mailbox.
@@ -22,6 +24,7 @@ namespace users{
         GetProfileResponse(){};
 
         GetProfileResponse(const QString& arg){ m_emailAddress = arg; };
+        virtual ~GetProfileResponse(){};
 
     public:
             /**

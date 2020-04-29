@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "messages"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -62,10 +64,12 @@ std::unique_ptr<BatchDeleteBodyArg> BatchDeleteBodyArg::EXAMPLE(int context_inde
     static int example_idx = 0;
     example_idx++;
     std::unique_ptr<BatchDeleteBodyArg> rv(new BatchDeleteBodyArg);
-    std::list<QString> list_of_ids;
+    std::vector<QString> list_of_ids;
     for(int i = 0; i < 5; i++){
         rv->m_ids.push_back(QString("id_%1").arg(i+1));
     }
+    QString tmp_m_ids = ApiAutotest::INSTANCE().getString4List("messages::BatchDeleteBodyArg", "m_ids");
+    if(!tmp_m_ids.isEmpty())rv->m_ids.push_back(tmp_m_ids);
     return rv;
 }
 #endif //API_QT_AUTOTEST

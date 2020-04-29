@@ -1,10 +1,11 @@
 #include <iostream>
 #include <QBuffer>
+#include <QTimer>
 #include "ApiEndpoint.h"
 
 #ifdef API_QT_AUTOTEST
 #include "ApiAutotest.h"
-#define LOG_REQUEST     ApiAutotest::INSTANCE().logRequest(m_last_req_info);
+#define LOG_REQUEST     ApiAutotest::INSTANCE().logRequest(lastRequestInfo().request);
 #endif
 
 #ifdef API_QT_DIAGNOSTICS
@@ -24,27 +25,11 @@ using namespace googleQt;
 
 ApiEndpoint::ApiEndpoint(ApiClient* c):m_client(c)
 {
-#ifndef API_QT_DIAGNOSTICS
-    m_last_req_info = "WARNING: last_req_info is not available because googleQt lib was compiled without API_QT_DIAGNOSTICS tracing option.";
-#endif
 }
 
-void ApiEndpoint::addAuthHeader(QNetworkRequest& request)
+ApiEndpoint::~ApiEndpoint() 
 {
-#define DEF_USER_AGENT "googleQtC++11-Client"
 
-    QString bearer = QString("Bearer %1").arg(m_client->getToken());
-    request.setRawHeader("Authorization", bearer.toUtf8());
-    request.setRawHeader("Host", "www.googleapis.com");
-    QString user_agent = DEF_USER_AGENT;
-    if(m_client && !m_client->userAgent().isEmpty()){
-        user_agent = QString("%1 %2")
-            .arg(m_client->userAgent())
-            .arg(DEF_USER_AGENT);
-    }
-    request.setRawHeader("User-Agent", user_agent.toUtf8());
-
-#undef DEF_USER_AGENT
 };
 
 void ApiEndpoint::runEventsLoop()const
@@ -63,13 +48,52 @@ void ApiEndpoint::setProxy(const QNetworkProxy& proxy)
     m_con_mgr.setProxy(proxy);
 };
 
+bool ApiEndpoint::isQueryInProgress()const 
+{
+    return !m_replies_in_progress.empty();
+};
+
+void ApiEndpoint::abortRequests()
+{
+    if (!m_replies_in_progress.empty()) {
+        NET_REPLIES_IN_PROGRESS copy_of_replies = m_replies_in_progress;
+        std::for_each(copy_of_replies.begin(), copy_of_replies.end(), [](std::pair<QNetworkReply*, std::shared_ptr<FINISHED_REQ>> p)
+        {
+            p.first->abort();
+        });
+    }
+};
+
 void ApiEndpoint::cancelAll()
 {
-    NET_REPLIES_IN_PROGRESS copy_of_replies = m_replies_in_progress;
-    std::for_each(copy_of_replies.begin(), copy_of_replies.end(), [](std::pair<QNetworkReply*, std::shared_ptr<FINISHED_REQ>> p)
-    {
-        p.first->abort();
-    });
+#ifdef API_QT_AUTOTEST
+    ApiAutotest::INSTANCE().cancellAll();
+#endif
+    if (!m_replies_in_progress.empty()) {
+        int i = 1;
+        abortRequests();
+        for (; i < 5; i++) {
+            QEventLoop* loop = new QEventLoop;
+            QTimer::singleShot(200, [=]() {
+                loop->exit();
+            });
+            loop->exec();
+            delete loop; 
+            loop = nullptr;
+            if (m_replies_in_progress.empty())
+                break;
+
+            qWarning() << "googleQt/trying to abort network request" 
+                << "size=" << m_replies_in_progress.size() 
+                << "attempt=" << i;
+            abortRequests();
+        }
+    }
+
+    if (!m_replies_in_progress.empty()) {
+        qWarning() << "Warning googleQt/failed to abort network request"
+            << "size=" << m_replies_in_progress.size();
+    }
 };
 
 void ApiEndpoint::registerReply(std::shared_ptr<requester>& rb, QNetworkReply* r, std::shared_ptr<FINISHED_REQ> finishedLambda)
@@ -107,16 +131,51 @@ void ApiEndpoint::unregisterReply(QNetworkReply* r)
     r->deleteLater();
 };
 
+DiagnosticRequestInfo ApiEndpoint::lastRequestInfo()const
+{
+#ifdef API_QT_DIAGNOSTICS
+	if (!m_requests.empty()) {
+		auto i = m_requests.rbegin();
+		return *i;
+	}
+	DiagnosticRequestInfo r;
+	return r;
+#else
+	DiagnosticRequestInfo r;
+	r.tag = "";
+	r.request = "last_req_info is not available because googleQt lib was compiled without API_QT_DIAGNOSTICS tracing option.";
+	return r;
+#endif//API_QT_DIAGNOSTICS
+};
+
+const DGN_LIST&	ApiEndpoint::diagnosticRequests()const 
+{
+	return m_requests;
+};
+
+void ApiEndpoint::diagnosticClearRequestsList() 
+{
+	m_requests.clear();
+};
 
 void ApiEndpoint::updateLastRequestInfo(QString s)
 {
-    m_last_req_info = s;
+#ifdef API_QT_DIAGNOSTICS
+	DiagnosticRequestInfo r;
+	r.tag = m_diagnosticsRequestTag;
+	r.context = m_diagnosticsRequestContext;
+	r.request = s;
+	m_requests.push_back(r);
+	if (m_requests.size() > 512) {
+		m_requests.erase(m_requests.begin(), m_requests.begin() + 256);
+	}
+#endif //API_QT_DIAGNOSTICS
 };
 
 QNetworkReply* ApiEndpoint::getData(const QNetworkRequest &req)
 {
     TRACE_REQUEST("GET", req, "");
-
+    
 #ifdef API_QT_AUTOTEST
     LOG_REQUEST;
     return nullptr;
@@ -234,6 +293,57 @@ QNetworkReply* ApiEndpoint::MPartUpload_requester::request(QNetworkRequest& r)
     return m_ep.postData(r, bytes2post);
 }
 
+/**
+    requester
+*/
+ApiEndpoint::requester::requester(ApiEndpoint& e) :m_ep(e) 
+{
 
-#ifdef API_QT_AUTOTEST
-#endif
+};
+
+QNetworkReply * ApiEndpoint::requester::makeRequest(QNetworkRequest& r) 
+{
+    addAuthHeader(r);
+    return request(r);
+};
+
+void ApiEndpoint::requester::addAuthHeader(QNetworkRequest& request)
+{
+#define DEF_USER_AGENT "googleQtC++11-Client"
+
+    QString bearer = QString("Bearer %1").arg(m_ep.apiClient()->getToken());
+    request.setRawHeader("Authorization", bearer.toUtf8());
+    const char* h = getHostHeader();
+    if (h && h[0]) {
+        request.setRawHeader("Host", h);
+    }
+    QString user_agent = DEF_USER_AGENT;
+    if (!m_ep.apiClient()->userAgent().isEmpty()) {
+        user_agent = QString("%1 %2")
+            .arg(m_ep.apiClient()->userAgent())
+            .arg(DEF_USER_AGENT);
+    }
+    request.setRawHeader("User-Agent", user_agent.toUtf8());
+
+#undef DEF_USER_AGENT
+};
+
+const char* ApiEndpoint::requester::getHostHeader()const 
+{
+    return "www.googleapis.com";
+};
+
+
+/**
+    contact_requester
+*/
+ApiEndpoint::contact_requester::contact_requester(ApiEndpoint& e) :requester(e)
+{
+
+};
+
+const char* ApiEndpoint::contact_requester::getHostHeader()const
+{
+    return nullptr;
+};
+

@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "permissions"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -11,7 +13,7 @@
 
 namespace googleQt{
 namespace permissions{
-    class PermissionResourcesCollection{
+    class GOOGLEQT_DLLSPEC PermissionResourcesCollection{
         /**
             field: kind: This is always drive#permissionList.
             field: permissions: The full list of permissions.
@@ -25,6 +27,7 @@ namespace permissions{
         PermissionResourcesCollection(const QString& arg):
         m_kind("drive#permissionList")
         { m_kind = arg; };
+        virtual ~PermissionResourcesCollection(){};
 
     public:
             /**
@@ -36,8 +39,8 @@ namespace permissions{
             /**
                 The full list of permissions.
             */
-        const std::list <ResourcePermission>& permissions()const{return m_permissions;};
-        PermissionResourcesCollection& setPermissions(const std::list <ResourcePermission>& arg){m_permissions=arg;return *this;};
+        const std::vector<ResourcePermission>& permissions()const{return m_permissions;};
+        PermissionResourcesCollection& setPermissions(const std::vector<ResourcePermission>& arg){m_permissions=arg;return *this;};
 
     public:
         operator QJsonObject ()const;
@@ -67,7 +70,7 @@ namespace permissions{
             /**
                 The full list of permissions.
             */
-        std::list <ResourcePermission> m_permissions;
+        std::vector<ResourcePermission> m_permissions;
 
     };//PermissionResourcesCollection
 

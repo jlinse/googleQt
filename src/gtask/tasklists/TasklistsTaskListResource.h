@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "tasklists"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -10,7 +12,7 @@
 
 namespace googleQt{
 namespace tasklists{
-    class TaskListResource{
+    class GOOGLEQT_DLLSPEC TaskListResource{
         /**
             field: id: Task list identifier.
             field: title: Title of the task list.
@@ -30,6 +32,7 @@ namespace tasklists{
         TaskListResource(const QString& arg):
         m_kind("tasks#taskList")
         { m_id = arg; };
+        virtual ~TaskListResource(){};
 
     public:
             /**

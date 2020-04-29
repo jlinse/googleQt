@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "attachments"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -10,7 +12,7 @@
 
 namespace googleQt{
 namespace attachments{
-    class MessageAttachment{
+    class GOOGLEQT_DLLSPEC MessageAttachment{
         /**
             field: attachment_id: When present, contains the ID of an external
                 attachment that can be retrieved in a separate
@@ -29,6 +31,7 @@ namespace attachments{
         MessageAttachment(){};
 
         MessageAttachment(const QString& arg){ m_attachmentId = arg; };
+        virtual ~MessageAttachment(){};
 
     public:
             /**

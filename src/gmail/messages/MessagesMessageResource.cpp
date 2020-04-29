@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "messages"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -83,10 +85,12 @@ std::unique_ptr<MessageResource> MessageResource::EXAMPLE(int context_index, int
     std::unique_ptr<MessageResource> rv(new MessageResource);
     rv->m_id = ApiAutotest::INSTANCE().getId("messages::MessageResource", example_idx);
     rv->m_threadId = ApiAutotest::INSTANCE().getString("messages::MessageResource", "m_threadId", QString("threadId_%1").arg(example_idx));
-    std::list<QString> list_of_labelIds;
+    std::vector<QString> list_of_labelIds;
     for(int i = 0; i < 5; i++){
         rv->m_labelIds.push_back(QString("id_%1").arg(i+1));
     }
+    QString tmp_m_labelIds = ApiAutotest::INSTANCE().getString4List("messages::MessageResource", "m_labelIds");
+    if(!tmp_m_labelIds.isEmpty())rv->m_labelIds.push_back(tmp_m_labelIds);
     rv->m_snippet = ApiAutotest::INSTANCE().getString("messages::MessageResource", "m_snippet", QString("snippet_%1").arg(example_idx));
     rv->m_historyId = ApiAutotest::INSTANCE().getInt("messages::MessageResource", "m_historyId", 5 + example_idx);
     rv->m_internalDate = ApiAutotest::INSTANCE().getInt("messages::MessageResource", "m_internalDate", 6 + example_idx);

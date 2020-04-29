@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "tasks"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -16,7 +18,7 @@ namespace googleQt{
 namespace tasks{
 
 
-    class TasksRoutes: public GoogleRouteBase{
+    class GOOGLEQT_DLLSPEC TasksRoutes: public GoogleRouteBase{
     public:
         TasksRoutes(Endpoint* ep):GoogleRouteBase(ep){};
             /**

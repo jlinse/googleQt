@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "messages"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -10,16 +12,17 @@
 
 namespace googleQt{
 namespace messages{
-    class BatchDeleteBodyArg{
+    class GOOGLEQT_DLLSPEC BatchDeleteBodyArg{
 
     public:
         BatchDeleteBodyArg(){};
 
-        BatchDeleteBodyArg(const std::list <QString>& arg){ m_ids = arg; };
+        BatchDeleteBodyArg(const std::vector<QString>& arg){ m_ids = arg; };
+        virtual ~BatchDeleteBodyArg(){};
 
     public:
-        const std::list <QString>& ids()const{return m_ids;};
-        BatchDeleteBodyArg& setIds(const std::list <QString>& arg){m_ids=arg;return *this;};
+        const std::vector<QString>& ids()const{return m_ids;};
+        BatchDeleteBodyArg& setIds(const std::vector<QString>& arg){m_ids=arg;return *this;};
 
     public:
         operator QJsonObject ()const;
@@ -41,7 +44,7 @@ namespace messages{
 
 
     protected:
-        std::list <QString> m_ids;
+        std::vector<QString> m_ids;
 
     };//BatchDeleteBodyArg
 

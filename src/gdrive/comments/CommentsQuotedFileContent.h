@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "comments"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -10,7 +12,7 @@
 
 namespace googleQt{
 namespace comments{
-    class QuotedFileContent{
+    class GOOGLEQT_DLLSPEC QuotedFileContent{
         /**
             field: mime_type: The MIME type of the quoted content.
             field: value: The quoted content itself. This is interpreted as
@@ -21,6 +23,7 @@ namespace comments{
         QuotedFileContent(){};
 
         QuotedFileContent(const QString& arg){ m_mimeType = arg; };
+        virtual ~QuotedFileContent(){};
 
     public:
             /**

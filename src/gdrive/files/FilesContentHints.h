@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "files"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -11,7 +13,7 @@
 
 namespace googleQt{
 namespace files{
-    class ContentHints{
+    class GOOGLEQT_DLLSPEC ContentHints{
         /**
             field: thumbnail: A thumbnail for a file.
             field: indexable_text: Text to be indexed for the file to improve
@@ -23,6 +25,7 @@ namespace files{
         ContentHints(){};
 
         ContentHints(const ThumbnailInfo& arg){ m_thumbnail = arg; };
+        virtual ~ContentHints(){};
 
     public:
             /**

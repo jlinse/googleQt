@@ -30,11 +30,17 @@ namespace googleQt{
         DECL_STD_BOUND_TASK_CB      (updateStyle);
         DECL_STD_BOUND_TASK_CB      (postStyleB);
         DECL_STD_BOUND_TASK_CB      (postContactStyleB);
+        DECL_STD_BOUND_TASK_CB      (postContactGroupStyleB);
+        DECL_STD_BOUND_TASK_CB      (putContactStyleB);
+        DECL_STD_BOUND_TASK_CB      (putContactGroupStyleB);
         DECL_BODYLESS_BOUND_TASK_CB (getStyle);
         DECL_BODYLESS_BOUND_TASK_CB (getContactStyle);
         DECL_BODYLESS_BOUND_TASK_CB (postStyle);
         DECL_VOID_BOUND_TASK_CB     (postStyle);
         DECL_VOID_BOUND_TASK_CB     (deleteStyle);
+        DECL_BODY_VOID_RES_BOUND_TASK_CB(deleteContactStyleB);
+        DECL_BODY_VOID_RES_BOUND_TASK_CB(deleteContactGroupStyleB);
+        DECL_BODY_VOID_RES_BOUND_TASK_CB(deleteContactPhotoStyleB);        
 
         template <class RES, class RESULT_FACTORY>
         void getStyle(QUrl url,
@@ -134,7 +140,7 @@ namespace googleQt{
                  failed_callback);
         }
 
-        //...
+        /// BEGIN contact routes ///
         template <class RES, class RESULT_FACTORY>
         void getContactStyle(QUrl url,
             std::function<void(std::unique_ptr<RES>)> completed_callback,
@@ -156,7 +162,7 @@ namespace googleQt{
                 std::function<void(std::unique_ptr<RES>)> completed_callback,
                 std::function<void(std::unique_ptr<GoogleException>)> failed_callback)
         {
-            QString xml = body.toXmlString();
+            QString xml = body.toXml(client()->userId());
             std::shared_ptr<requester> rb(new POST_requester4Contact(*this, std::move(xml)));
             runRequest<RES,
                 RESULT_FACTORY>
@@ -165,7 +171,214 @@ namespace googleQt{
                     completed_callback,
                     failed_callback);
         }
-        //...
+
+        template <class RES,
+            class RESULT_FACTORY,
+            class BODY>
+            void putContactStyleB(QUrl url,
+                const BODY& body,
+                std::function<void(std::unique_ptr<RES>)> completed_callback,
+                std::function<void(std::unique_ptr<GoogleException>)> failed_callback)
+        {
+            QString etag = body.etag();
+            QString xml = body.toXml();
+            std::shared_ptr<requester> rb(new PUT_requester4Contact(*this, std::move(etag), std::move(xml)));
+            runRequest<RES,
+                RESULT_FACTORY>
+                (url,
+                    std::move(rb),
+                    completed_callback,
+                    failed_callback);
+        }
+
+        template <class BODY>
+            void deleteContactStyleB(QUrl url,
+                const BODY& body,
+                std::function<void(void)> completed_callback,
+                std::function<void(std::unique_ptr<GoogleException>)> failed_callback)
+        {
+            std::function<void(std::unique_ptr<googleQt::VoidType>)> completed_with_type = nullptr;
+            if (completed_callback != nullptr)
+            {
+                completed_with_type = [=](std::unique_ptr<googleQt::VoidType>)
+                {
+                    completed_callback();
+                };
+            }
+            
+            QString etag = body.etag();
+            std::shared_ptr<requester> rb(new DELETE_requester4Contact(*this, std::move(etag)));
+            runRequest<VoidType, VoidType>
+                (url,
+                    std::move(rb),
+                    completed_with_type,
+                    failed_callback);
+        }
+        
+            template <class RES,
+                class RESULT_FACTORY,
+                class BODY>
+                void postContactGroupStyleB(QUrl url,
+                    const BODY& body,
+                    std::function<void(std::unique_ptr<RES>)> completed_callback,
+                    std::function<void(std::unique_ptr<GoogleException>)> failed_callback)
+            {
+                QString xml = body.toXml(client()->userId());
+                std::shared_ptr<requester> rb(new POST_requester4Contact(*this, std::move(xml)));
+                runRequest<RES,
+                    RESULT_FACTORY>
+                    (url,
+                        std::move(rb),
+                        completed_callback,
+                        failed_callback);
+            }
+
+            template <class RES,
+                class RESULT_FACTORY,
+                class BODY>
+                void putContactGroupStyleB(QUrl url,
+                    const BODY& body,
+                    std::function<void(std::unique_ptr<RES>)> completed_callback,
+                    std::function<void(std::unique_ptr<GoogleException>)> failed_callback)
+            {
+                QString etag = body.etag();
+                QString xml = body.toXml();
+                std::shared_ptr<requester> rb(new PUT_requester4Contact(*this, std::move(etag), std::move(xml)));
+                runRequest<RES,
+                    RESULT_FACTORY>
+                    (url,
+                        std::move(rb),
+                        completed_callback,
+                        failed_callback);
+            }
+
+            template <class BODY>
+            void deleteContactGroupStyleB(QUrl url,
+                const BODY& body,
+                std::function<void(void)> completed_callback,
+                std::function<void(std::unique_ptr<GoogleException>)> failed_callback)
+            {
+                std::function<void(std::unique_ptr<googleQt::VoidType>)> completed_with_type = nullptr;
+                if (completed_callback != nullptr)
+                {
+                    completed_with_type = [=](std::unique_ptr<googleQt::VoidType>)
+                    {
+                        completed_callback();
+                    };
+                }
+
+                QString etag = body.etag();
+                std::shared_ptr<requester> rb(new DELETE_requester4Contact(*this, std::move(etag)));
+                runRequest<VoidType, VoidType>
+                    (url,
+                        std::move(rb),
+                        completed_with_type,
+                        failed_callback);
+            }
+
+        ///photo
+        void downloadContactPhotoStyle(QUrl url, QIODevice* writeTo, GoogleVoidTask* t)
+        {
+            std::function<void(void)> completed_callback =
+                [=](void)
+            {
+                t->completed_callback();
+            };
+
+            std::function<void(std::unique_ptr<GoogleException>)> failed_callback =
+                [=](std::unique_ptr<GoogleException> ex)
+            {
+                t->failed_callback(std::move(ex));
+            };
+            downloadContactPhotoStyle(url, writeTo, completed_callback, failed_callback);
+        };
+
+        void downloadContactPhotoStyle(QUrl url,
+            QIODevice* writeTo,
+            std::function<void(void)> completed_callback = nullptr,
+            std::function<void(std::unique_ptr<GoogleException>)> failed_callback = nullptr)
+        {
+            std::function<void(std::unique_ptr<googleQt::VoidType>)> completed_with_type = nullptr;
+            if (completed_callback != nullptr)
+            {
+                completed_with_type = [=](std::unique_ptr<googleQt::VoidType>)
+                {
+                    completed_callback();
+                };
+            }
+
+            std::shared_ptr<requester> rb(new DOWNLOAD_requester4Contact(*this, writeTo));
+            runRequest<VoidType, VoidType>
+                (url,
+                    std::move(rb),
+                    completed_with_type,
+                    failed_callback);
+        }
+
+        void uploadContactPhotoStyle(QUrl url, QIODevice* writeTo, GoogleVoidTask* t)
+        {
+            std::function<void(void)> completed_callback =
+                [=](void)
+            {
+                t->completed_callback();
+            };
+
+            std::function<void(std::unique_ptr<GoogleException>)> failed_callback =
+                [=](std::unique_ptr<GoogleException> ex)
+            {
+                t->failed_callback(std::move(ex));
+            };
+            uploadContactPhotoStyle(url, writeTo, completed_callback, failed_callback);
+        };
+
+
+        void uploadContactPhotoStyle(QUrl url,
+            QIODevice* readFrom,
+            std::function<void(void)> completed_callback = nullptr,
+            std::function<void(std::unique_ptr<GoogleException>)> failed_callback = nullptr)
+        {
+            std::function<void(std::unique_ptr<googleQt::VoidType>)> completed_with_type = nullptr;
+            if (completed_callback != nullptr)
+            {
+                completed_with_type = [=](std::unique_ptr<googleQt::VoidType>)
+                {
+                    completed_callback();
+                };
+            }
+            QString etag("*");//ykh - todo - has to come from parameter
+            std::shared_ptr<requester> rb(new UPLOAD_photo_requester4Contact(*this, readFrom, std::move(etag)));
+            runRequest<VoidType, VoidType>
+                (url,
+                    std::move(rb),
+                    completed_with_type,
+                    failed_callback);
+        }
+
+        template <class BODY>
+        void deleteContactPhotoStyleB(QUrl url,
+            const BODY& body,
+            std::function<void(void)> completed_callback,
+            std::function<void(std::unique_ptr<GoogleException>)> failed_callback)
+        {
+            std::function<void(std::unique_ptr<googleQt::VoidType>)> completed_with_type = nullptr;
+            if (completed_callback != nullptr)
+            {
+                completed_with_type = [=](std::unique_ptr<googleQt::VoidType>)
+                {
+                    completed_callback();
+                };
+            }
+
+            QString etag = body.etag();
+            std::shared_ptr<requester> rb(new DELETE_requester4Contact(*this, std::move(etag)));
+            runRequest<VoidType, VoidType>
+                (url,
+                    std::move(rb),
+                    completed_with_type,
+                    failed_callback);
+        }
+
+        /// END contact routes ///
 
         template <class RES, class RESULT_FACTORY, class BODY>
         void postStyleB(QUrl url, const BODY& body,
@@ -262,7 +475,7 @@ namespace googleQt{
             std::function<void(std::unique_ptr<RES>)> completed_callback = nullptr,
             std::function<void(std::unique_ptr<GoogleException>)> failed_callback = nullptr)
         {
-            std::shared_ptr<requester> rb(new SimpleUpload_requester(*this, readFrom));
+            std::shared_ptr<requester> rb(new UPLOAD_requester(*this, readFrom));
             runRequest<RES, RESULT_FACTORY>
                 (url,
                     std::move(rb),
@@ -307,7 +520,6 @@ namespace googleQt{
                     completed_with_type,
                     failed_callback);
         }
-
 
 
         template <class RES, class RESULT_FACTORY, class BODY>
@@ -404,6 +616,43 @@ namespace googleQt{
             return url;
         }
 
+        template <class ARG>
+        QUrl buildContactGroupUrl(const ARG& a)const
+        {
+            QUrl url;
+            a.build(QString("https://www.google.com/m8/feeds/groups/%1/full")
+                    .arg(client()->userId()), url);
+            return url;
+        }
+
+        template <class ARG>
+        QUrl buildContactBatchUrl(const ARG& a)const
+        {
+            QUrl url;
+            a.build(QString("https://www.google.com/m8/feeds/contacts/%1/full/batch")
+                .arg(client()->userId()), url);
+            return url;
+        }
+
+        template <class ARG>
+        QUrl buildContactGroupBatchUrl(const ARG& a)const
+        {
+            QUrl url;
+            a.build(QString("https://www.google.com/m8/feeds/groups/%1/full/batch")
+                .arg(client()->userId()), url);
+            return url;
+        }    
+
+        template <class ARG>
+        QUrl buildContactPhotoUrl(const ARG& a)const
+        {
+            QUrl url;
+            QByteArray d = QUrl::toPercentEncoding(client()->userId());
+            a.build(QString("https://www.google.com/m8/feeds/photos/media/%1")
+                    .arg(d.data()), url);            
+            return url;
+        }
+        
         virtual void onErrorUnauthorized(const errors::ErrorInfo* er);
 
         GoogleClient* client();
@@ -412,18 +661,23 @@ namespace googleQt{
         template <class T>
         GoogleTask<T>* produceTask()
         {
-            GoogleTask<T>* rv = new GoogleTask<T>(*this);
+            GoogleTask<T>* rv = new GoogleTask<T>(apiClient());
             return rv;
         };
 
         GoogleVoidTask* produceVoidTask()
         {
-            return new GoogleVoidTask(*this);
+            return new GoogleVoidTask(apiClient());
         }
 
+        TaskAggregator* produceAggregatorTask()override
+        {
+            return new TaskAggregator(apiClient());
+        }
 
     protected:
         QString prepareErrorInfo(int status_code, const QUrl& url, const QByteArray& data);
+        QString prepareErrorSummary(int status_code);
         void addAppKeyParameter(QUrl& url)const;
 
 
@@ -434,10 +688,9 @@ namespace googleQt{
                         std::function<void(std::unique_ptr<GoogleException>)> failed_callback = nullptr)
         {
             QNetworkRequest firstRequest(url);
-            addAuthHeader(firstRequest);
             RESULT_FACTORY factory;
 
-            QNetworkReply *firstReply = firstBuilder->request(firstRequest);
+            QNetworkReply *firstReply = firstBuilder->makeRequest(firstRequest);
             if (!firstReply)
                 {
 #ifdef API_QT_AUTOTEST
@@ -448,7 +701,13 @@ namespace googleQt{
                 {                    
                     ApiAutotest::INSTANCE().emulateAutotestDownloadProgress(m_client);
                     QTimer::singleShot(10, [=]() {
-                        completed_callback(RES::EXAMPLE(0, 0));
+                        if (ApiAutotest::INSTANCE().isCancelRequested()) {
+                            qDebug() << "CancelRequested/endpoint";
+                        }
+                        else
+                        {
+                            completed_callback(RES::EXAMPLE(0, 0));
+                        }
                     });
                 }
 #else
@@ -473,6 +732,7 @@ namespace googleQt{
                                  switch (status_code)
                                      {
                                      case 200:
+                                     case 201:
                                          {
                                              if (completed_callback != nullptr)
                                                  {
@@ -496,9 +756,8 @@ namespace googleQt{
                                                      std::unique_ptr<errors::ErrorInfo> er = errors::ErrorInfo::factory::create(m_last_response);
                                                      onErrorUnauthorized(er.get());
                                                      //have to reset auth header as it got changed, side-effect..
-                                                     addAuthHeader(req);
                                                      authErrorsLimit--;
-                                                     QNetworkReply *secondaryReply = rb->request(req);
+                                                     QNetworkReply *secondaryReply = rb->makeRequest(req);
                                                      if(secondaryReply)
                                                          {
                                                             auto i = m_replies_in_progress.find(reply);
@@ -534,10 +793,7 @@ namespace googleQt{
                                      default:
                                          {
                                              if (failed_callback != nullptr) {
-                                                 std::string summary;
-                                                 if(status_code == 403){
-                                                     summary = "Invalid access token. You have to get new access token.";
-                                                 }
+                                                 std::string summary = prepareErrorSummary(status_code).toStdString();
                                                  m_last_response = reply->readAll();
                                                  std::string errorInfo = prepareErrorInfo(status_code,
                                                                                           url,

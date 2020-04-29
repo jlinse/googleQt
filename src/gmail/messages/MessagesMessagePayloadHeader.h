@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "messages"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -10,7 +12,7 @@
 
 namespace googleQt{
 namespace messages{
-    class MessagePayloadHeader{
+    class GOOGLEQT_DLLSPEC MessagePayloadHeader{
         /**
             field: name: The name of the header before the : separator. For
                 example, To.
@@ -22,6 +24,7 @@ namespace messages{
         MessagePayloadHeader(){};
 
         MessagePayloadHeader(const QString& arg){ m_name = arg; };
+        virtual ~MessagePayloadHeader(){};
 
     public:
             /**

@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "messages"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -11,7 +13,7 @@
 
 namespace googleQt{
 namespace messages{
-    class MessageResource{
+    class GOOGLEQT_DLLSPEC MessageResource{
         /**
             field: id: The immutable ID of the message.
             field: thread_id: The ID of the thread the message belongs to.
@@ -36,6 +38,7 @@ namespace messages{
         MessageResource(){};
 
         MessageResource(const QString& arg){ m_id = arg; };
+        virtual ~MessageResource(){};
 
     public:
             /**
@@ -53,8 +56,8 @@ namespace messages{
             /**
                 List of IDs of labels applied to this message.
             */
-        const std::list <QString>& labelids()const{return m_labelIds;};
-        MessageResource& setLabelids(const std::list <QString>& arg){m_labelIds=arg;return *this;};
+        const std::vector<QString>& labelids()const{return m_labelIds;};
+        MessageResource& setLabelids(const std::vector<QString>& arg){m_labelIds=arg;return *this;};
 
             /**
                 A short part of the message text.
@@ -132,7 +135,7 @@ namespace messages{
             /**
                 List of IDs of labels applied to this message.
             */
-        std::list <QString> m_labelIds;
+        std::vector<QString> m_labelIds;
 
             /**
                 A short part of the message text.

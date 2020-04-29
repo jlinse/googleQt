@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "files"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -10,7 +12,7 @@
 
 namespace googleQt{
 namespace files{
-    class LocationData{
+    class GOOGLEQT_DLLSPEC LocationData{
         /**
             field: latitude: latitude
             field: longitude: longitude
@@ -21,6 +23,7 @@ namespace files{
         LocationData(){};
 
         LocationData(const float& arg){ m_latitude = arg; };
+        virtual ~LocationData(){};
 
     public:
             /**

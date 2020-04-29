@@ -76,9 +76,10 @@ namespace googleQt{
             void    setUserId(QString id) { m_userId = id; };
 
             /**
-            *   Only return messages with labels that match all of the specified label IDs.
+            *   Only return messages with a label matching the ID.
             */
-            QStringList&  labels() { return m_labelIds; }
+            QString  labelId() { return m_labelId; }
+            void     setLabelId(QString sval) { m_labelId = sval; }
 
             /**
             *  The maximum number of history records to return. 
@@ -103,8 +104,19 @@ namespace googleQt{
             * If you receive no nextPageToken in the response, there are no updates to retrieve and you 
             * can store the returned historyId for a future request. 
             */
-            int           getStartHistoryId()const { return m_startHistoryId; }
-            void          setStartHistoryId(int v) { m_startHistoryId = v; }
+            uint64_t      getStartHistoryId()const { return m_startHistoryId; }
+            void          setStartHistoryId(uint64_t v) { m_startHistoryId = v; }
+
+            /**
+            *   historyTypes optional. History types to be returned by the function 
+            *   Acceptable values are:
+            *   "labelAdded"
+            *   "labelRemoved"
+            *   "messageAdded"
+            *   "messageDeleted"
+            */
+            QString         historyTypes()const { return m_historyTypes; }
+            void            setHistoryTypes(QString sval) { m_historyTypes = sval; }
 
             void build(const QString& link_path, QUrl& url)const override;
 #ifdef API_QT_AUTOTEST
@@ -112,11 +124,12 @@ namespace googleQt{
 #endif //API_QT_AUTOTEST
 
         protected:
+            uint64_t    m_startHistoryId;
             QString     m_userId;
-            QStringList m_labelIds;
-            int         m_maxResults;
-            QString     m_pageToken;
-            uint16_t    m_startHistoryId;
+            QString     m_labelId;
+            int         m_maxResults{60};
+            QString     m_pageToken;            
+            QString     m_historyTypes;
         };
         
         class GOOGLEQT_DLLSPEC DraftListArg : public QParamArg
@@ -183,15 +196,28 @@ namespace googleQt{
             void    setId(QString id) { m_id = id; };
 
             /**
-               "full": Returns the full email message data with body content 
-               parsed in the payload field; the raw field is not used. (default)
-               "metadata": Returns only email message ID, labels, and email 
-               headers.
-               "minimal": Returns only email message ID and labels; does not
-               return the email headers, body, or payload.
-               "raw": Returns the full email message data with body content 
-               in the raw field as a base64url encoded string; the payload 
-               field is not used.
+            !!!Warning!!! this class can be used to retrieve email or thread data,
+            see gmail reference and comments below
+
+            For email messages routes format has following meaning
+                   "full": Returns the full email message data with body content 
+                   parsed in the payload field; the raw field is not used. (default)
+                   "metadata": Returns only email message ID, labels, and email 
+                   headers.
+                   "minimal": Returns only email message ID and labels; does not
+                   return the email headers, body, or payload.
+                   "raw": Returns the full email message data with body content 
+                   in the raw field as a base64url encoded string; the payload 
+                   field is not used.
+
+            For email thread routes format has following meaning
+                "full": Returns the parsed email message content in the payload field 
+                and the raw field is not used. (default)
+                "metadata": Returns email headers with message metadata such as identifiers 
+                and labels.
+                "minimal": Only returns email message metadata such as identifiers and 
+                labels, it does not return the email headers, body, or payload.
+
              */
             
             QString      getFormat()const{return m_format;}
@@ -251,10 +277,10 @@ namespace googleQt{
             QString messageId()const { return m_message_id; }
             void setMessageId(QString mid) { m_message_id = mid; }
 
-            const std::list <QString>& getAddlabels()const { return m_addLabels; };
-            void setAddlabels(const std::list <QString>& arg) { m_addLabels = arg;};
-            const std::list <QString>& getRemovelabels()const { return m_removeLabels; };
-            void setRemovelabels(const std::list <QString>& arg) { m_removeLabels = arg;};
+            const std::vector<QString>& getAddlabels()const { return m_addLabels; };
+            void setAddlabels(const std::vector<QString>& arg) { m_addLabels = arg;};
+            const std::vector<QString>& getRemovelabels()const { return m_removeLabels; };
+            void setRemovelabels(const std::vector<QString>& arg) { m_removeLabels = arg;};
 
             void addAddLabel(QString name);
             void addRemoveLabel(QString name);
@@ -270,8 +296,8 @@ namespace googleQt{
         protected:
             QString m_userId;
             QString m_message_id;
-            std::list <QString> m_addLabels;
-            std::list <QString> m_removeLabels;
+            std::vector<QString> m_addLabels;
+            std::vector<QString> m_removeLabels;
 
         };
     
@@ -336,8 +362,17 @@ namespace googleQt{
             QString getBCC()const { return m_BCC; }
             void setBCC(QString bcc_val) { m_BCC = bcc_val; }
 
+            QString getThreadId()const { return m_threadId; }
+            void    setThreadId(QString thread_id) { m_threadId = thread_id; }
+
+            QString getInReplyToMsgId()const { return m_InReplyToMsgId; }
+            void    setInReplyToMsgId(QString msgId) { m_InReplyToMsgId = msgId; }
+
+            QString getReferences()const { return m_references; }
+            void    setReferences(QString sval) { m_references = sval; }
+
             void addBodyPart(const MimeBodyPart& pt) { m_body_parts.push_back(pt); };
-            void addAttachments(const std::list<QString>& attachments);
+            void addAttachments(const STRING_LIST& attachments);
 
             /**
                 if rawRfc822MessageFile is set the file content as whole will be loaded
@@ -363,8 +398,11 @@ namespace googleQt{
             QString m_CC;
             QString m_BCC;
             QString m_Subject;
+            QString m_threadId;
+            QString m_InReplyToMsgId;
+            QString m_references;
             QString m_rawRfc822MessageFile;
-            std::list<MimeBodyPart> m_body_parts;
+            std::vector<MimeBodyPart> m_body_parts;
         };
 
         class GOOGLEQT_DLLSPEC InsertMessageArg : public PathArg<path_insert, InsertMessageArg>

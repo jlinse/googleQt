@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "revisions"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -16,7 +18,7 @@ namespace googleQt{
 namespace revisions{
 
 
-    class RevisionsRoutes: public GoogleRouteBase{
+    class GOOGLEQT_DLLSPEC RevisionsRoutes: public GoogleRouteBase{
     public:
         RevisionsRoutes(Endpoint* ep):GoogleRouteBase(ep){};
             /**

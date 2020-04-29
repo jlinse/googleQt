@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "messages"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -67,7 +69,7 @@ std::unique_ptr<MessageListRes> MessageListRes::EXAMPLE(int context_index, int p
     static int example_idx = 0;
     example_idx++;
     std::unique_ptr<MessageListRes> rv(new MessageListRes);
-    std::list<messages::MessageResource> list_of_messages;
+    std::vector<messages::MessageResource> list_of_messages;
     for(int i = 0; i < 5; i++){
         messages::MessageResource p = *(messages::MessageResource::EXAMPLE(i, context_index).get());
         ApiAutotest::INSTANCE().prepareAutoTestObj("messages::MessageListRes", "messages::MessageResource", &p, i, context_index);

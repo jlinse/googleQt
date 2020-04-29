@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "about"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -10,7 +12,7 @@
 
 namespace googleQt{
 namespace about{
-    class StorageQuota{
+    class GOOGLEQT_DLLSPEC StorageQuota{
         /**
             field: limit: The usage limit, if applicable. This will not be
                 present if the user has unlimited storage.
@@ -27,6 +29,7 @@ namespace about{
         StorageQuota(){};
 
         StorageQuota(const float& arg){ m_limit = arg; };
+        virtual ~StorageQuota(){};
 
     public:
             /**

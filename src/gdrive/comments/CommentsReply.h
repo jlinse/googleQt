@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "comments"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -11,7 +13,7 @@
 
 namespace googleQt{
 namespace comments{
-    class Reply{
+    class GOOGLEQT_DLLSPEC Reply{
         /**
             field: id: The ID of the reply.
             field: kind: This is always drive#reply
@@ -39,6 +41,7 @@ namespace comments{
         Reply(const QString& arg):
         m_kind("drive#reply")
         { m_id = arg; };
+        virtual ~Reply(){};
 
     public:
             /**

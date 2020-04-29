@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "files"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -70,10 +72,12 @@ std::unique_ptr<GeneratedIdsCollection> GeneratedIdsCollection::EXAMPLE(int cont
     std::unique_ptr<GeneratedIdsCollection> rv(new GeneratedIdsCollection);
     rv->m_kind = ApiAutotest::INSTANCE().getString("files::GeneratedIdsCollection", "m_kind", QString("kind_%1").arg(example_idx));
     rv->m_space = ApiAutotest::INSTANCE().getString("files::GeneratedIdsCollection", "m_space", QString("space_%1").arg(example_idx));
-    std::list<QString> list_of_ids;
+    std::vector<QString> list_of_ids;
     for(int i = 0; i < 5; i++){
         rv->m_ids.push_back(QString("id_%1").arg(i+1));
     }
+    QString tmp_m_ids = ApiAutotest::INSTANCE().getString4List("files::GeneratedIdsCollection", "m_ids");
+    if(!tmp_m_ids.isEmpty())rv->m_ids.push_back(tmp_m_ids);
     return rv;
 }
 #endif //API_QT_AUTOTEST

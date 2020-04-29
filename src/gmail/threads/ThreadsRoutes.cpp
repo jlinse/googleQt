@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "threads"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -67,6 +69,88 @@ void ThreadsRoutes::list_AsyncCB(
         ThreadListRes,
         ThreadListRes::factory
         >
+        (m_end_point->buildGmailUrl("threads", arg),
+        completed_callback,
+        failed_callback);
+}
+
+std::unique_ptr<ThreadResource> ThreadsRoutes::modify(const gmail::ModifyMessageArg& arg){
+    return modify_Async(arg)->waitForResultAndRelease();
+}
+
+GoogleTask<ThreadResource>* ThreadsRoutes::modify_Async(const gmail::ModifyMessageArg& arg)
+{
+    GoogleTask<ThreadResource>* t = m_end_point->produceTask<ThreadResource>();
+    m_end_point->postStyleB<
+        ThreadResource,
+        ThreadResource::factory
+        ,gmail::ModifyMessageArg>
+        (m_end_point->buildGmailUrl("threads", arg),
+        arg,
+        t);
+    return t;
+}
+
+void ThreadsRoutes::modify_AsyncCB(
+    const gmail::ModifyMessageArg& arg,
+    std::function<void(std::unique_ptr<ThreadResource>)> completed_callback ,
+    std::function<void(std::unique_ptr<GoogleException>)> failed_callback)
+{
+    m_end_point->postStyleB
+        <
+        ThreadResource,
+        ThreadResource::factory
+        , gmail::ModifyMessageArg
+        >
+        (m_end_point->buildGmailUrl("threads", arg),
+        arg,
+        completed_callback,
+        failed_callback);
+}
+
+void ThreadsRoutes::trash(const gmail::TrashMessageArg& arg ){
+    trash_Async(arg)->waitForResultAndRelease();
+}
+
+GoogleVoidTask* ThreadsRoutes::trash_Async(const gmail::TrashMessageArg& arg)
+{
+    GoogleVoidTask* t = m_end_point->produceVoidTask();
+    m_end_point->postStyle
+        (m_end_point->buildGmailUrl("threads", arg),
+        t);
+    return t;
+}
+
+void ThreadsRoutes::trash_AsyncCB(
+    const gmail::TrashMessageArg& arg,
+    std::function<void()> completed_callback ,
+    std::function<void(std::unique_ptr<GoogleException>)> failed_callback)
+{
+    m_end_point->postStyle
+        (m_end_point->buildGmailUrl("threads", arg),
+        completed_callback,
+        failed_callback);
+}
+
+void ThreadsRoutes::untrash(const gmail::UntrashMessageArg& arg ){
+    untrash_Async(arg)->waitForResultAndRelease();
+}
+
+GoogleVoidTask* ThreadsRoutes::untrash_Async(const gmail::UntrashMessageArg& arg)
+{
+    GoogleVoidTask* t = m_end_point->produceVoidTask();
+    m_end_point->postStyle
+        (m_end_point->buildGmailUrl("threads", arg),
+        t);
+    return t;
+}
+
+void ThreadsRoutes::untrash_AsyncCB(
+    const gmail::UntrashMessageArg& arg,
+    std::function<void()> completed_callback ,
+    std::function<void(std::unique_ptr<GoogleException>)> failed_callback)
+{
+    m_end_point->postStyle
         (m_end_point->buildGmailUrl("threads", arg),
         completed_callback,
         failed_callback);

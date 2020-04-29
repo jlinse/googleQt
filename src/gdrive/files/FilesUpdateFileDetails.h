@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "files"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -11,7 +13,7 @@
 
 namespace googleQt{
 namespace files{
-    class UpdateFileDetails{
+    class GOOGLEQT_DLLSPEC UpdateFileDetails{
         /**
             field: name: The name of the file. This is not necessarily unique
                 within a folder.
@@ -32,6 +34,7 @@ namespace files{
         UpdateFileDetails(){};
 
         UpdateFileDetails(const QString& arg){ m_name = arg; };
+        virtual ~UpdateFileDetails(){};
 
     public:
             /**

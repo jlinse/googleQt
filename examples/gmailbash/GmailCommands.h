@@ -17,6 +17,10 @@ namespace googleQt{
     {
         class GmailCacheRoutes;
     }
+    namespace threads 
+    {
+        class ThreadResource;
+    }
 }
 
 class GmailCommands
@@ -33,6 +37,12 @@ public:
        ls_by_labels - list messages that belong to labels provided
     */
     void ls_by_labels(QString labelIds);
+
+    /**
+       search - search for messages 
+    */
+    void search(QString q);
+
     
     /**
        get - get message by id using default (full) format
@@ -129,9 +139,30 @@ public:
     void get_thread(QString thread_id);
 
     /**
+        add_thread_label - modify thread, add labels
+    */
+    void add_thread_label(QString threadid_labelids);
+
+    /**
+    remove_thread_label - modify thread, remove labels
+    */
+    void remove_thread_label(QString threadid_labelids);
+
+    /**
        ls_drafts - list drafts
     */
     void ls_drafts(QString);
+
+    /**
+    ls_threads_by_labels - list threads that belong to labels provided
+    */
+    void ls_threads_by_labels(QString labelIds);
+
+    /**
+    q_threads - list threads using query parameter
+    */
+    void q_threads(QString qstr);
+
 
     /**
        get_draft - get draft info
@@ -179,6 +210,7 @@ public:
     */
     void down_att_async(QString msgId);
     
+    void get_cache_threads(QString );
 
     void export_last_result(QString );
     void print_last_result(QString );
@@ -188,21 +220,19 @@ public:
     void base64url_decode(QString data);
     
 protected:
-    void listMessages(QString nextToken, QString labelIds);
-    void listThreads(QString nextToken, QString labelIds);
+    void listMessages(QString nextToken, QString labelIds, QString query = "");
+    void listThreads(QString nextToken, QString labelIds, QString qstr);
     void listDrafts(QString nextToken);
     void printSnippet(messages::MessageResource*);
     void printMessage(messages::MessageResource*);
+    void printThread(threads::ThreadResource*);
     void exportMessageBody(messages::MessageResource* r, QString fileName);
     void printLabel(labels::LabelResource*);
     bool loadMessageFile(QString fileName, messages::MessageResource*);
-    void initCache();
     
 protected:
     GoogleClient& m_c;
     GmailRoutes*  m_gm;
-    googleQt::mail_cache::GmailCacheRoutes* m_cr;
-    bool          m_cache_initialized {false};
     int           m_batch_counter{0};
 };
 

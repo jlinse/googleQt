@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "about"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -12,7 +14,7 @@
 
 namespace googleQt{
 namespace about{
-    class AboutResource{
+    class GOOGLEQT_DLLSPEC AboutResource{
         /**
             field: kind: This is always drive#about.
             field: user: The authenticated user.
@@ -27,6 +29,7 @@ namespace about{
         AboutResource(const QString& arg):
         m_kind("drive#about")
         { m_kind = arg; };
+        virtual ~AboutResource(){};
 
     public:
             /**

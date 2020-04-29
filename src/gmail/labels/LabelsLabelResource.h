@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "labels"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -10,7 +12,7 @@
 
 namespace googleQt{
 namespace labels{
-    class LabelResource{
+    class GOOGLEQT_DLLSPEC LabelResource{
         /**
             field: id: The immutable ID of the label.
             field: name: The display name of the label.
@@ -32,6 +34,7 @@ namespace labels{
         LabelResource(){};
 
         LabelResource(const QString& arg){ m_id = arg; };
+        virtual ~LabelResource(){};
 
     public:
             /**

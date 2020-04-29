@@ -59,10 +59,11 @@ int main(int argc, char *argv[])
     std::cout << "Your need TaskListId & TaskId to get information about Task." << std::endl;
     
     demo::ApiListener lsn;
-    GoogleClient c(appInfo.release(), authInfo.release());
-    QObject::connect(&c, &GoogleClient::downloadProgress, &lsn, &demo::ApiListener::transferProgress);
+    //GoogleClient c(appInfo.release(), authInfo.release());
+	auto c = googleQt::createClient(appInfo.release(), authInfo.release());
+    QObject::connect(c.get(), &GoogleClient::downloadProgress, &lsn, &demo::ApiListener::transferProgress);
 
-    GtaskCommands cmd(c);
+    GtaskCommands cmd(*c);
     demo::Terminal t("gtask");
     t.addAction("ls_tlist",     "List TaskLists", [&](QString arg) {cmd.ls_tlist(arg); });
     t.addAction("get_tlist",    "Get TaskList by tasklistID", [&](QString arg) {cmd.get_tlist(arg); });
@@ -74,7 +75,11 @@ int main(int argc, char *argv[])
     t.addAction("get",          "Get Task by tasklistID & taskID", [&](QString arg) {cmd.get(arg); });
     t.addAction("insert",       "Insert new task", [&](QString arg) {cmd.insert(arg); });
     t.addAction("update",       "Update a task", [&](QString arg) {cmd.update(arg); });
+    t.addAction("update_note",  "Update a task note", [&](QString arg) {cmd.update_note(arg); });
+    t.addAction("move",       "Move task", [&](QString arg) {cmd.move(arg); });
     t.addAction("delete",       "Delete a task", [&](QString arg) {cmd.delete_task(arg); });
+    t.addSeparator();
+    t.addAction("reload_cache", "Reload task list", [&](QString arg) {cmd.reload_cache(arg); });
     t.start();
     return 0;
 }

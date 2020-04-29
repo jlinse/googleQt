@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "tasks"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -10,7 +12,7 @@
 
 namespace googleQt{
 namespace tasks{
-    class TaskLink{
+    class GOOGLEQT_DLLSPEC TaskLink{
         /**
             field: type: Type of the link, e.g. email.
             field: description: The description. In HTML speak: Everything
@@ -22,6 +24,7 @@ namespace tasks{
         TaskLink(){};
 
         TaskLink(const QString& arg){ m_type = arg; };
+        virtual ~TaskLink(){};
 
     public:
             /**

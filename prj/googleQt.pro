@@ -1,5 +1,5 @@
 QT       += network xml sql
-QT       -= gui
+QT       += gui
 #CONFIG += staticlib
 DEFINES += GOOGLEQT_DLL
 CONFIG -= flat
@@ -8,7 +8,7 @@ TEMPLATE = lib
 GM_MODULES = users messages labels threads drafts errors history attachments
 GT_MODULES = tasks tasklists
 GD_MODULES = about files permissions comments revisions
-GC_MODULES = contacts
+GC_MODULES = contacts contact_group
 
 SRC_DIR = ../src
 G_DIR = $${SRC_DIR}/google
@@ -83,7 +83,7 @@ if(!isEmpty( ARD_DEBUG )){
 	  CONFIG += debug
 	  CONFIG -= release
       unix {
-           QMAKE_CXXFLAGS += -O0
+           QMAKE_CXXFLAGS += -O0 -std=c++14
            }
       !build_pass:message("+debug")
 }

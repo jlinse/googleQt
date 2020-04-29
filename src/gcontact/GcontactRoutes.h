@@ -3,26 +3,39 @@
 #include "google/endpoint/ApiClient.h"
 
 #include "gcontact/contacts/ContactsRoutes.h"
+#include "gcontact/contact_group/ContactGroupRoutes.h"
 
 namespace googleQt
 {
     class Endpoint;
 
+    namespace gcontact {
+        class GcontactCacheRoutes;
+        class GContactCacheBase;
+    };
+
     class GOOGLEQT_DLLSPEC GcontactRoutes {
     public:
 
-        GcontactRoutes(Endpoint*);
-        Endpoint* endpoint() { return m_endpoint; }
+        GcontactRoutes(Endpoint&/*, gcontact::GContactCacheBase**/);
+        Endpoint& endpoint() { return m_endpoint; }
 
         contacts::ContactsRoutes* getContacts();
+        contact_group::ContactGroupRoutes* getContactGroup();
+        googleQt::gcontact::GcontactCacheRoutes* cacheRoutes();
 
+        static QString encodeGroupUri(QString userId, QString groupId);
+        
 #ifdef API_QT_AUTOTEST
-        void autotest() {};
+        void autotest();
 #endif
 
     protected:
-        std::unique_ptr<contacts::ContactsRoutes> m_Contacts;
-        Endpoint*  m_endpoint;
+        Endpoint&  m_endpoint;
+        std::unique_ptr<contacts::ContactsRoutes> m_contacts;
+        std::unique_ptr<contact_group::ContactGroupRoutes> m_contact_group;
+        std::unique_ptr<googleQt::gcontact::GcontactCacheRoutes>    m_CacheRoutes;
+        //gcontact::GContactCacheBase* m_contacts_cache{nullptr};
     };  
 };//googleQt
 

@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "messages"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -11,7 +13,7 @@
 
 namespace googleQt{
 namespace messages{
-    class MessageListRes{
+    class GOOGLEQT_DLLSPEC MessageListRes{
         /**
             field: messages: List of messages.
             field: next_page_token: Token to retrieve the next page of results
@@ -22,14 +24,15 @@ namespace messages{
     public:
         MessageListRes(){};
 
-        MessageListRes(const std::list <MessageResource>& arg){ m_messages = arg; };
+        MessageListRes(const std::vector<MessageResource>& arg){ m_messages = arg; };
+        virtual ~MessageListRes(){};
 
     public:
             /**
                 List of messages.
             */
-        const std::list <MessageResource>& messages()const{return m_messages;};
-        MessageListRes& setMessages(const std::list <MessageResource>& arg){m_messages=arg;return *this;};
+        const std::vector<MessageResource>& messages()const{return m_messages;};
+        MessageListRes& setMessages(const std::vector<MessageResource>& arg){m_messages=arg;return *this;};
 
             /**
                 Token to retrieve the next page of results in the list.
@@ -66,7 +69,7 @@ namespace messages{
             /**
                 List of messages.
             */
-        std::list <MessageResource> m_messages;
+        std::vector<MessageResource> m_messages;
 
             /**
                 Token to retrieve the next page of results in the list.

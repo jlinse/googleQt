@@ -10,6 +10,9 @@
 #include "google/demo/ApiTerminal.h"
 #include "google/demo/ApiListener.h"
 #include "GmailCommands.h"
+#include "gmail/GmailRoutes.h"
+#include "google/AUTOTEST/GoogleAutotest.h"
+
 
 using namespace googleQt;
 
@@ -56,13 +59,23 @@ int main(int argc, char *argv[])
     authInfo->setEmail(argEmail);
 
     demo::ApiListener lsn;
-    GoogleClient c(appInfo.release(), authInfo.release());
-    QObject::connect(&c, &GoogleClient::downloadProgress, &lsn, &demo::ApiListener::transferProgress);
+	auto c = googleQt::createClient(appInfo.release(), authInfo.release());
+    QObject::connect(c.get(), &GoogleClient::downloadProgress, &lsn, &demo::ApiListener::transferProgress);   
+    DECLARE_AUTOTEST_INSTANCE(c.get(), "autotest-res.txt");
+
+    /// setup DB-cache ///
+    const QString dbPath = "gm-cache.sqlite";
+    auto mr = c->gmail();
+    if (!mr->setupCache(dbPath, "downloads", "contacts-cache")) {
+        std::cout << "Failed to initialize SQLite cache database: " << dbPath.toStdString() << std::endl;
+        return 0;
+    };
     
-    GmailCommands cmd(c);
+    GmailCommands cmd(*c);
     demo::Terminal t("gmail");
     t.addAction("ls",               "List Messages", [&](QString arg) {cmd.ls(arg);} );
     t.addAction("ls_by_labels",     "List Messages by label ID", [&](QString arg) {cmd.ls_by_labels(arg);} );
+    t.addAction("search",     "Search for Messages", [&](QString arg) {cmd.search(arg);} );
     t.addAction("get",              "Get Message by ID", [&](QString arg) {cmd.get(arg);} );
     t.addAction("get_snippet",      "Get Message snippet by ID", [&](QString arg) {cmd.get_snippet(arg);} );    
     t.addAction("get_raw",          "Get Message by ID using raw format", [&](QString arg) {cmd.get(arg);} );
@@ -85,6 +98,10 @@ int main(int argc, char *argv[])
     t.addAction("ls_threads",       "List Threads", [&](QString arg) {cmd.ls_threads(arg); });
     t.addAction("get_thread",       "Get Thread Info", [&](QString arg) {cmd.get_thread(arg); });
     t.addAction("ls_drafts",        "List Drafts", [&](QString arg) {cmd.ls_drafts(arg); });
+    t.addAction("ls_threads_by_labels", "List Threads by label", [&](QString arg) {cmd.ls_threads_by_labels(arg); });
+    t.addAction("q_threads", "Search Threads", [&](QString arg) {cmd.q_threads(arg); });
+    t.addAction("add_thread_label", "Add Thread Label", [&](QString arg) {cmd.add_thread_label(arg); });
+    t.addAction("remove_thread_label", "Remove Thread Label", [&](QString arg) {cmd.remove_thread_label(arg); });
     t.addAction("get_draft",        "Get Draft Info", [&](QString arg) {cmd.get_draft(arg); });
     t.addAction("history",          "Get Mailbox History", [&](QString arg) {cmd.history(arg); });
     t.addSeparator();
@@ -98,6 +115,8 @@ int main(int argc, char *argv[])
     t.addAction("download_attachments", "Download all attachments of message", [&](QString arg) {cmd.download_attachments(arg); });
     t.addAction("down_att_async", "Download all attachments of message (async way)", [&](QString arg) {cmd.down_att_async(arg); });
     t.addSeparator();
+    t.addAction("get_cache_threads", "Check for new threads & emails on cloud, if found return and update cache, otherwise return cache messages", [&](QString arg) {cmd.get_cache_threads(arg); });
+    t.addSeparator();
     t.addAction("export_last_result",   "Export last response to a file", [&](QString arg) {cmd.export_last_result(arg); });
     t.addAction("print_last_result",   "Print last response", [&](QString arg) {cmd.print_last_result(arg); });
     t.addAction("print_user_id",   "Print user ID", [&](QString arg) {cmd.print_user_id(arg); });
@@ -105,5 +124,8 @@ int main(int argc, char *argv[])
     t.addAction("base64url_decode",   "Base64Url decode data", [&](QString arg) {cmd.base64url_decode(arg); });
     
     t.start();
+	googleQt::releaseClient(c);
+    std::cout << "press ENTER to exit" << std::endl;
+    std::cin.ignore();
     return 0;
 }

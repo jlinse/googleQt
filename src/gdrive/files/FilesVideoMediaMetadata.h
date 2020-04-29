@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "files"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -10,7 +12,7 @@
 
 namespace googleQt{
 namespace files{
-    class VideoMediaMetadata{
+    class GOOGLEQT_DLLSPEC VideoMediaMetadata{
         /**
             field: width: The width of the video in pixels.
             field: height: The height of the video in pixels.
@@ -21,6 +23,7 @@ namespace files{
         VideoMediaMetadata(){};
 
         VideoMediaMetadata(const quint64& arg){ m_width = arg; };
+        virtual ~VideoMediaMetadata(){};
 
     public:
             /**

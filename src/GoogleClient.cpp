@@ -6,18 +6,55 @@
 #include "gtask/GtaskRoutes.h"
 #include "gdrive/GdriveRoutes.h"
 #include "gcontact/GcontactRoutes.h"
+#include "gcontact/GcontactCache.h"
 
 using namespace googleQt;
 
+#ifdef API_QT_AUTOTEST
+int g__gclient_alloc_counter = 0;
+#endif
+
+gclient_ptr googleQt::createClient(googleQt::ApiAppInfo* appInfo, googleQt::ApiAuthInfo* authInfo, gcontact::GContactCacheBase* custom_contacts_cache)
+{
+	std::shared_ptr<GoogleClient>  rv(new GoogleClient(appInfo, authInfo, custom_contacts_cache));
+	return rv;
+};
+
+void googleQt::releaseClient(gclient_ptr p)
+{
+	if (p) {
+		p.reset();
+	}
+};
+
+
 GoogleClient::GoogleClient(ApiAppInfo* appInfo,
-                         ApiAuthInfo* authInfo)
+                         ApiAuthInfo* authInfo, 
+                         gcontact::GContactCacheBase* custom_contacts_cache)
     :ApiClient(appInfo, authInfo)
 {
     m_endpoint.reset(new Endpoint(this));
+    if (custom_contacts_cache) {
+        m_contacts_cache = custom_contacts_cache;
+        m_own_contacts_cache = false;
+    }
+    else {
+        m_contacts_cache = new gcontact::GContactCache(*this);
+        m_own_contacts_cache = true;
+    }
+#ifdef API_QT_AUTOTEST
+    g__gclient_alloc_counter++;
+#endif
 };
 
-GoogleClient::~GoogleClient(){
-
+GoogleClient::~GoogleClient()
+{
+#ifdef API_QT_AUTOTEST
+    g__gclient_alloc_counter--;
+#endif
+    if (m_own_contacts_cache) {
+        delete m_contacts_cache;
+    }
 };
 
 void GoogleClient::cancelAllRequests() 
@@ -25,9 +62,14 @@ void GoogleClient::cancelAllRequests()
     m_endpoint->cancelAll();
 };
 
+bool GoogleClient::isQueryInProgress()const
+{
+  return m_endpoint->isQueryInProgress();
+};
+
 QString GoogleClient::lastApiCall()
 {
-    return m_endpoint->lastRequestInfo();
+    return m_endpoint->lastRequestInfo().request;
 }
 
 void GoogleClient::runEventsLoop()const
@@ -112,7 +154,7 @@ GdriveRoutes* GoogleClient::gdrive()
 GcontactRoutes* GoogleClient::gcontact()
 {
     if (!m_contact_routes) {
-        m_contact_routes.reset(new GcontactRoutes(m_endpoint.get()));
+        m_contact_routes.reset(new GcontactRoutes(*(m_endpoint.get())));
     }
     return m_contact_routes.get();
 };
@@ -127,4 +169,9 @@ bool GoogleClient::refreshToken()
 void GoogleClient::setNetworkProxy(const QNetworkProxy& proxy)
 {
     m_endpoint->setProxy(proxy);
+};
+
+ApiEndpoint* GoogleClient::endpoint()
+{
+    return m_endpoint.get();
 };

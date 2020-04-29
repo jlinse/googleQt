@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "comments"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -16,7 +18,7 @@ namespace googleQt{
 namespace comments{
 
 
-    class CommentsRoutes: public GoogleRouteBase{
+    class GOOGLEQT_DLLSPEC CommentsRoutes: public GoogleRouteBase{
     public:
         CommentsRoutes(Endpoint* ep):GoogleRouteBase(ep){};
             /**

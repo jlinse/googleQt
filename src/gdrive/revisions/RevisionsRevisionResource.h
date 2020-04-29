@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "revisions"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -11,7 +13,7 @@
 
 namespace googleQt{
 namespace revisions{
-    class RevisionResource{
+    class GOOGLEQT_DLLSPEC RevisionResource{
         /**
             field: id: The ID of the revision.
             field: kind: Identifies what kind of resource this is. Value: the
@@ -49,6 +51,7 @@ namespace revisions{
         RevisionResource(const QString& arg):
         m_kind("drive#revision")
         { m_id = arg; };
+        virtual ~RevisionResource(){};
 
     public:
             /**

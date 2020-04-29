@@ -72,7 +72,7 @@ QString GdriveRoutes::fileExists(QString name, QString parentId)
     try
     {
         auto lst = getFiles()->list(arg);
-        const std::list <files::FileResource>& files = lst->files();
+        auto& files = lst->files();
         if (files.size() > 0) 
         {
             rv = files.cbegin()->id();
@@ -113,8 +113,8 @@ QString GdriveRoutes::folderExists(QString name, QString parentId)
 {
     QString rv = "";
 
-    gdrive::FileListArg arg;
-    QString q = QString("name contains '%1' and mimeType = 'application/vnd.google-apps.folder' and trashed = false")
+    gdrive::FileListArg arg;//contains
+    QString q = QString("name = '%1' and mimeType = 'application/vnd.google-apps.folder' and trashed = false")
         .arg(name);
     if (!parentId.isEmpty())
     {
@@ -125,7 +125,7 @@ QString GdriveRoutes::folderExists(QString name, QString parentId)
     try
     {
         auto lst = getFiles()->list(arg);
-        const std::list <files::FileResource>& files = lst->files();
+        auto& files = lst->files();
         if (files.size() > 0)
         {
             rv = files.cbegin()->id();
@@ -146,7 +146,7 @@ QString GdriveRoutes::createFolder(QString name, QString parentId /*= ""*/)
     arg.setFields("id");
     if (!parentId.isEmpty())
     {
-        std::list <QString> parents;
+        std::vector<QString> parents;
         parents.push_back(parentId);
         arg.setParents(parents);
     }
@@ -243,8 +243,8 @@ bool GdriveRoutes::renameFile(QString fileID, QString newName)
     return rv;
 };
 
-bool GdriveRoutes::moveFile(QString fileID, const std::list<QString>& removeParentFolderIDs,
-    const std::list<QString>& addParentFolderIDs) 
+bool GdriveRoutes::moveFile(QString fileID, const STRING_LIST& removeParentFolderIDs,
+    const STRING_LIST& addParentFolderIDs) 
 {
     bool rv = false;
     try
@@ -264,8 +264,8 @@ bool GdriveRoutes::moveFile(QString fileID, const std::list<QString>& removePare
 
 bool GdriveRoutes::moveFile(QString fileID, QString removeParentFolderID, QString addParentFolderID) 
 {
-    std::list<QString> removeParentFolderIDs;
-    std::list<QString> addParentFolderIDs;
+    STRING_LIST removeParentFolderIDs;
+    STRING_LIST addParentFolderIDs;
     removeParentFolderIDs.push_back(removeParentFolderID);
     addParentFolderIDs.push_back(addParentFolderID);
     return moveFile(fileID, removeParentFolderIDs, addParentFolderIDs);
@@ -302,7 +302,7 @@ std::pair<bool, int> GdriveRoutes::uploadFileUsingId(QString localFilePath,
         file_details.setId(fileId);
         if (!parentFolderId.isEmpty())
         {
-            std::list <QString> parent_folders;
+            std::vector<QString> parent_folders;
             parent_folders.push_back(parentFolderId);
             file_details.setParents(parent_folders);
         }
@@ -325,7 +325,7 @@ std::pair<bool, int> GdriveRoutes::uploadFileUsingId(QString localFilePath,
     catch (GoogleException& e)
     {
         qWarning() << "Exception: " << e.what();
-        rv.first = true;
+        rv.first = false;
         rv.second = e.statusCode();
     }
     file_in.close();
@@ -363,7 +363,7 @@ QString GdriveRoutes::uploadFileKeepExisting(QString localFilePath, QString dest
         files::CreateFileDetails& file_details = arg.fileDetailes();
         if (!parentFolderId.isEmpty())
         {
-            std::list <QString> parent_folders;
+            std::vector<QString> parent_folders;
             parent_folders.push_back(parentFolderId);
             file_details.setParents(parent_folders);
         }
@@ -444,7 +444,7 @@ int GdriveRoutes::cleanUpAppDataFolder(const std::set<QString>& name2del,
             gdrive::FileListArg arg;
             arg.setSpaces("appDataFolder");
             auto lst = getFiles()->list(arg);
-            const std::list <files::FileResource>& files = lst->files();
+            auto& files = lst->files();
             for(const files::FileResource& f : files)
                 {
                     if(ids2keep.find(f.id()) != ids2keep.end())
@@ -472,7 +472,7 @@ QString  GdriveRoutes::appDataFileExists(QString name)
             gdrive::FileListArg arg;
             arg.setSpaces("appDataFolder");
             auto lst = getFiles()->list(arg);
-            const std::list <files::FileResource>& files = lst->files();
+            auto& files = lst->files();
             for(const files::FileResource& f : files)
                 {
                     if(f.name().compare(name) == 0)
@@ -509,7 +509,7 @@ GdriveRoutes::FolderContentMap GdriveRoutes::mapFolderContent(QString parentId, 
     try
     {
         auto lst = getFiles()->list(arg);
-        const std::list <files::FileResource>& files = lst->files();
+        auto& files = lst->files();
         for (auto i = files.begin(); i != files.end(); i++)
         {
             QString id = i->id();

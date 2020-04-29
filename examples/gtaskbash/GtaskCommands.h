@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GoogleClient.h"
+#include "gtask/GtaskCache.h"
 
 using namespace googleQt;
 
@@ -13,6 +14,13 @@ namespace googleQt {
     namespace tasklists {
         class TaskListResource;
     };
+    /*
+    namespace gtask_cache{
+        class TaskInfo;
+        class TaskInfo{
+            class ptr;
+        };
+        };*/
 }//googleQt
 
 class GtaskCommands
@@ -40,6 +48,12 @@ public:
     */
     void update(QString tlistid_space_taskid_title);
 
+    /**
+    * update_note - update note of a task, requires tasklist ID, task ID
+    */
+    void update_note(QString tlistid_space_taskid_note);
+
+    
     /**
     * deleteTask - delete task by task list ID and task ID
     */
@@ -80,12 +94,16 @@ public:
     */
     void delete_tlist(QString tlistid);
 
+    void reload_cache(QString tlistids);
 
 protected:
     void printTask(tasks::TaskResource*);
     void printTaskList(tasklists::TaskListResource*);
-
-
+    void printCacheTitles();
+    void printCacheParents();
+    void printCacheTree();
+    void printTaskInTree(googleQt::gtask_cache::TaskInfo::ptr p, int ident);
+    
 protected:
     GoogleClient& m_c;
     GtaskRoutes*  m_gt;

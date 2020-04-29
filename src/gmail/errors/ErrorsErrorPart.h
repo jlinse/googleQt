@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "errors"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -10,7 +12,7 @@
 
 namespace googleQt{
 namespace errors{
-    class ErrorPart{
+    class GOOGLEQT_DLLSPEC ErrorPart{
         /**
             field: domain: domain - global
             field: reason: reason - badRequest, authError etc.
@@ -21,6 +23,7 @@ namespace errors{
         ErrorPart(){};
 
         ErrorPart(const QString& arg){ m_domain = arg; };
+        virtual ~ErrorPart(){};
 
     public:
             /**

@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "messages"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -13,7 +15,7 @@
 
 namespace googleQt{
 namespace messages{
-    class MessagePayload{
+    class GOOGLEQT_DLLSPEC MessagePayload{
         /**
             field: part_id: The immutable ID of the message part.
             field: mime_type: The MIME type of the message part.
@@ -32,6 +34,7 @@ namespace messages{
         MessagePayload(){};
 
         MessagePayload(const QString& arg){ m_partId = arg; };
+        virtual ~MessagePayload(){};
 
     public:
             /**
@@ -59,8 +62,8 @@ namespace messages{
                 the standard RFC 2822 email headers such as To, From, and
                 Subject.
             */
-        const std::list <MessagePayloadHeader>& headers()const{return m_headers;};
-        MessagePayload& setHeaders(const std::list <MessagePayloadHeader>& arg){m_headers=arg;return *this;};
+        const std::vector<MessagePayloadHeader>& headers()const{return m_headers;};
+        MessagePayload& setHeaders(const std::vector<MessagePayloadHeader>& arg){m_headers=arg;return *this;};
 
             /**
                 The message part body for this part, which may be empty for
@@ -72,8 +75,8 @@ namespace messages{
             /**
                 The list of parts in the message
             */
-        const std::list <MessagePart>& parts()const{return m_parts;};
-        MessagePayload& setParts(const std::list <MessagePart>& arg){m_parts=arg;return *this;};
+        const std::vector<MessagePart>& parts()const{return m_parts;};
+        MessagePayload& setParts(const std::vector<MessagePart>& arg){m_parts=arg;return *this;};
 
     public:
         operator QJsonObject ()const;
@@ -117,7 +120,7 @@ namespace messages{
                 the standard RFC 2822 email headers such as To, From, and
                 Subject.
             */
-        std::list <MessagePayloadHeader> m_headers;
+        std::vector<MessagePayloadHeader> m_headers;
 
             /**
                 The message part body for this part, which may be empty for
@@ -128,7 +131,7 @@ namespace messages{
             /**
                 The list of parts in the message
             */
-        std::list <MessagePart> m_parts;
+        std::vector<MessagePart> m_parts;
 
     };//MessagePayload
 

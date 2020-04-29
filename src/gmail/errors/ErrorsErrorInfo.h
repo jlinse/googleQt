@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "errors"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -11,7 +13,7 @@
 
 namespace googleQt{
 namespace errors{
-    class ErrorInfo{
+    class GOOGLEQT_DLLSPEC ErrorInfo{
         /**
             field: errors: groups of error details
             field: code: HTTP response code
@@ -21,14 +23,15 @@ namespace errors{
     public:
         ErrorInfo(){};
 
-        ErrorInfo(const std::list <ErrorPart>& arg){ m_errors = arg; };
+        ErrorInfo(const std::vector<ErrorPart>& arg){ m_errors = arg; };
+        virtual ~ErrorInfo(){};
 
     public:
             /**
                 groups of error details
             */
-        const std::list <ErrorPart>& errors()const{return m_errors;};
-        ErrorInfo& setErrors(const std::list <ErrorPart>& arg){m_errors=arg;return *this;};
+        const std::vector<ErrorPart>& errors()const{return m_errors;};
+        ErrorInfo& setErrors(const std::vector<ErrorPart>& arg){m_errors=arg;return *this;};
 
             /**
                 HTTP response code
@@ -65,7 +68,7 @@ namespace errors{
             /**
                 groups of error details
             */
-        std::list <ErrorPart> m_errors;
+        std::vector<ErrorPart> m_errors;
 
             /**
                 HTTP response code

@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "permissions"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -10,7 +12,7 @@
 
 namespace googleQt{
 namespace permissions{
-    class ResourcePermission{
+    class GOOGLEQT_DLLSPEC ResourcePermission{
         /**
             field: id: The ID of this permission. This is a unique identifier
                 for the grantee, and is published in User resources as
@@ -41,6 +43,7 @@ namespace permissions{
         ResourcePermission(const QString& arg):
         m_kind("drive#permission")
         { m_id = arg; };
+        virtual ~ResourcePermission(){};
 
     public:
             /**

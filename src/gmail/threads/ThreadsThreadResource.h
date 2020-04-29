@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "threads"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -11,7 +13,7 @@
 
 namespace googleQt{
 namespace threads{
-    class ThreadResource{
+    class GOOGLEQT_DLLSPEC ThreadResource{
         /**
             field: id: The unique ID of the thread.
             field: snipped: A short part of the message text.
@@ -23,6 +25,7 @@ namespace threads{
         ThreadResource(){};
 
         ThreadResource(const QString& arg){ m_id = arg; };
+        virtual ~ThreadResource(){};
 
     public:
             /**
@@ -43,8 +46,8 @@ namespace threads{
         quint64 historyid()const{return m_historyId;};
         ThreadResource& setHistoryid(const quint64& arg){m_historyId=arg;return *this;};
 
-        const std::list <messages::MessageResource>& messages()const{return m_messages;};
-        ThreadResource& setMessages(const std::list <messages::MessageResource>& arg){m_messages=arg;return *this;};
+        const std::vector<messages::MessageResource>& messages()const{return m_messages;};
+        ThreadResource& setMessages(const std::vector<messages::MessageResource>& arg){m_messages=arg;return *this;};
 
     public:
         operator QJsonObject ()const;
@@ -81,7 +84,7 @@ namespace threads{
             */
         quint64 m_historyId = {0};
 
-        std::list <messages::MessageResource> m_messages;
+        std::vector<messages::MessageResource> m_messages;
 
     };//ThreadResource
 

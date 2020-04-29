@@ -24,6 +24,8 @@ namespace googleQt{
         build("");
     };
 
+    GoogleException* clone()const;
+
     virtual const char* what() const throw (){
       return m_msg.c_str();
     }

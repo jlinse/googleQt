@@ -50,6 +50,15 @@ ApiAutotest& ApiAutotest::operator << (const QByteArray & arr){
     log_string(arr.constData());
     return *this;
 }
+
+ApiAutotest& ApiAutotest::operator << (const int & val) 
+{
+    QString s = QString("%1").arg(val);
+    std::string s2 = s.toStdString();
+    log_string(s2.c_str());
+    return *this;
+};
+
 ApiAutotest& ApiAutotest::operator << (const QNetworkRequest & r){
     QString s = QString("POST %1").arg(r.url().toString());
     log_string(s.toStdString().c_str());
@@ -185,6 +194,82 @@ void ApiAutotest::addId(const char* class_name, QString id)
         }
 };
 
+void ApiAutotest::addMemberValue(const char* class_name, const char* field_name, QString val)
+{
+    auto i = m_availMemberValue.find(class_name);
+    if (i != m_availMemberValue.end())
+    {
+        //i->second[field_name].push_back(std::pair<QString, int>(val, 0));
+        i->second[field_name].insert(std::make_pair(val, 0));
+    }
+    else 
+    {
+        MEMBER_VAL m;
+        auto& j = m[field_name].find(val);
+        if (j != m[field_name].end()) {
+            j->second = j->second - 1;
+        }
+        else {
+            m[field_name].insert(std::make_pair(val, 0));
+        }
+        m_availMemberValue[class_name] = m;
+    }
+};
+
+void ApiAutotest::addBatchId(const char* class_name, std::pair<QString, googleQt::EBatchId> bid) 
+{
+    auto i = m_availBatchID.find(class_name);
+    if (i != m_availBatchID.end())
+    {
+        i->second.push_back(bid);
+    }
+    else
+    {
+        BATCH_LIST lst;
+        lst.push_back(bid);
+        m_availBatchID[class_name] = lst;
+    }
+};
+
+void ApiAutotest::addIdSet(const char* class_name, const IDSET& id_set)
+{
+    for (auto c : id_set) {       
+        addId(class_name, c);
+    }
+};
+
+void ApiAutotest::addBatchIdList(const char* class_name, const BATCH_LIST& bid_list)
+{
+    for (auto c : bid_list) {
+        addBatchId(class_name, c);
+    }
+};
+
+IDSET ApiAutotest::getReservedIdSet(const char* class_name)
+{
+    IDSET rv;
+    CLASS_ID_MAP::iterator i = m_availID.find(class_name);
+    if (i != m_availID.end() && !i->second.empty())
+    {
+        rv = i->second;
+        i->second.clear();
+    }
+    return rv;
+};
+
+BATCH_LIST ApiAutotest::getReservedBatchList(const char* class_name) 
+{
+    BATCH_LIST rv;
+    auto i = m_availBatchID.find(class_name);
+    if (i != m_availBatchID.end() && !i->second.empty())
+    {
+        rv = i->second;
+        i->second.clear();
+    }
+    return rv;
+
+};
+
 QString ApiAutotest::getId(const char* class_name, int default_id_num)
 {
     QString rv;
@@ -199,13 +284,24 @@ QString ApiAutotest::getId(const char* class_name, int default_id_num)
         }
     else 
         {
-            if (strcmp(class_name, "messages::MessageResource") == 0)
-                {
+            if (strcmp(class_name, "messages::MessageResource") == 0){
                     rv = QString("mid_%1_%2_%3")
                         .arg(default_id_num)
                         .arg(QDateTime::currentMSecsSinceEpoch())
                         .arg(qrand());
                 }
+            else if(strcmp(class_name, "threads::ThreadResource") == 0){
+                rv = QString("thread_id_%1_%2_%3")
+                    .arg(default_id_num)
+                    .arg(QDateTime::currentMSecsSinceEpoch())
+                    .arg(qrand());
+            }
+            else if (strcmp(class_name, "labels::LabelResource") == 0) {
+                rv = QString("label_id_%1_%2_%3")
+                    .arg(default_id_num)
+                    .arg(QDateTime::currentMSecsSinceEpoch())
+                    .arg(qrand());
+            }
             else
                 {
                     rv = QString("id_%1").arg(default_id_num);
@@ -254,30 +350,107 @@ QString ApiAutotest::getString(const char* class_name, const char* field_name, Q
                 .arg(QDateTime::currentMSecsSinceEpoch())
                 .arg(qrand());
         }
+    }//ykh - todo could be generic
+    else if (strcmp(class_name, "messages::MessageResource") == 0 ||
+            strcmp(class_name, "labels::LabelResource") == 0)
+    {
+        if (strcmp(field_name, "m_threadId") == 0 ||
+            strcmp(field_name, "m_name") == 0)
+        {
+            auto i = m_availMemberValue.find(class_name);
+            if (i != m_availMemberValue.end()) {
+                auto j = i->second.find(field_name);
+                if (j != i->second.end()) {
+                    if (!j->second.empty()) {
+                        IDVALMAP& v2usage = j->second;
+                        if (!v2usage.empty()) {
+                            IDVALMAP::iterator min_it = v2usage.begin();
+                            for (IDVALMAP::iterator k = v2usage.begin(); k != v2usage.end(); k++) {
+                                if (k->second < min_it->second) {
+                                    min_it = k;
+                                }
+                            }
+
+                            if (min_it != v2usage.end()) {
+                                min_it->second += 1;
+                                rv = min_it->first;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     return rv;
 };
 
+
+void ApiAutotest::setString4List(const char* class_name, const char* field_name, QString value) 
+{
+    QString key = class_name;
+    key += field_name;
+    m_str4list[key] = value;
+};
+
+void ApiAutotest::clearString4List(const char* class_name, const char* field_name) 
+{
+    QString key = class_name;
+    key += field_name;
+    m_str4list.erase(key);
+};
+
+
+QString ApiAutotest::getString4List(const char* class_name, const char* field_name)
+{
+    QString rv = "";
+    if (strcmp(class_name, "messages::MessageResource") == 0){
+        if (strcmp(field_name, "m_labelIds") == 0)
+        {
+            QString key = class_name;
+            key += field_name;
+
+            auto it = m_str4list.find(key);
+            if (it != m_str4list.end()) {
+                rv = it->second;
+            }
+    }      
+    }
+    return rv;
+}
+
+void ApiAutotest::cancellAll()const
+{
+    m_cancelRequest = true;
+};
+
 void ApiAutotest::emulateAutotestDownloadProgress(googleQt::ApiClient* cl)
 {
-    qApp->processEvents();
-    if (isProgressEmulationEnabled()) {
-        static int max_progress     = 100;
-        static int step_progress    = 20;
-        for (int progress = 0; progress < max_progress; progress += step_progress) {
-            cl->downloadProgress(progress, max_progress);
-            sleep(100);
+    if(!m_cancelRequest){
+        qApp->processEvents();
+        if (isProgressEmulationEnabled()) {
+            static int max_progress     = 100;
+            static int step_progress    = 20;
+            for (int progress = 0; progress < max_progress; progress += step_progress) {
+                cl->downloadProgress(progress, max_progress);
+                sleep(10);
+                if(m_cancelRequest)
+                    break;
+            }
         }
     }
 };
 
 void ApiAutotest::sleep(int millisecondsToWait)
 {
-    QTime endTime = QTime::currentTime().addMSecs(millisecondsToWait);
-    while (QTime::currentTime() < endTime)
-    {
-        QCoreApplication::processEvents(QEventLoop::AllEvents, 10);
+    if(!m_cancelRequest){
+        QTime endTime = QTime::currentTime().addMSecs(millisecondsToWait);
+        while (QTime::currentTime() < endTime)
+            {
+                QCoreApplication::processEvents(QEventLoop::AllEvents, 10);
+                if(m_cancelRequest)
+                    break;
+            }
     }
 };
 

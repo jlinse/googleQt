@@ -3,6 +3,7 @@
 #include <QString>
 #include "ApiAuthInfo.h"
 #include "ApiAppInfo.h"
+#include "ApiBase.h"
 
 namespace googleQt{
     class GoogleAppInfo;
@@ -17,7 +18,7 @@ namespace googleQt{
         */
         static QUrl getCodeAuthorizeUrl(const ApiAppInfo* appInfo, QString scope);
 
-        static QUrl getCodeAuthorizeUrl(const ApiAppInfo* appInfo, const std::list<QString>& scopes);
+        static QUrl getCodeAuthorizeUrl(const ApiAppInfo* appInfo, const STRING_LIST& scopes);
 
         /**
            getTokenFromCode - makes http call to Dropbox to retrive
@@ -31,6 +32,10 @@ namespace googleQt{
          */
         static bool refreshToken(const ApiAppInfo* appInfo, ApiAuthInfo* auth);
         
+        /**
+        * Create, read, update, and delete labels only.
+        */
+        static QString authScope_gmail_labels();
         
         /**
          *  Read all resources and their metadata—no write operations.
@@ -92,7 +97,11 @@ namespace googleQt{
         */
         static QString authScope_contacts_read_only();
 
-
+        /**
+        * read/write access to People Contacts and Contact Groups
+        
+        static QString authScope_contacts();
+        */
     protected:
         static bool updateToken(const QUrl& url, ApiAuthInfo* auth, const QString& str);
     };

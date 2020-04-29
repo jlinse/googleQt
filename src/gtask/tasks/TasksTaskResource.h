@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "tasks"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -11,7 +13,7 @@
 
 namespace googleQt{
 namespace tasks{
-    class TaskResource{
+    class GOOGLEQT_DLLSPEC TaskResource{
         /**
             field: id: Task identifier.
             field: title: Title of the task.
@@ -60,6 +62,7 @@ namespace tasks{
         ,m_deleted(false)
         ,m_hidden(false)
         { m_id = arg; };
+        virtual ~TaskResource(){};
 
     public:
             /**
@@ -159,8 +162,8 @@ namespace tasks{
         bool hidden()const{return m_hidden;};
         TaskResource& setHidden(const bool& arg){m_hidden=arg;return *this;};
 
-        const std::list <TaskLink>& links()const{return m_links;};
-        TaskResource& setLinks(const std::list <TaskLink>& arg){m_links=arg;return *this;};
+        const std::vector<TaskLink>& links()const{return m_links;};
+        TaskResource& setLinks(const std::vector<TaskLink>& arg){m_links=arg;return *this;};
 
     public:
         operator QJsonObject ()const;
@@ -265,7 +268,7 @@ namespace tasks{
             */
         bool m_hidden;
 
-        std::list <TaskLink> m_links;
+        std::vector<TaskLink> m_links;
 
     };//TaskResource
 

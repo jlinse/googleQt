@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "files"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -17,7 +19,7 @@ namespace googleQt{
 namespace files{
 
 
-    class FilesRoutes: public GoogleRouteBase{
+    class GOOGLEQT_DLLSPEC FilesRoutes: public GoogleRouteBase{
     public:
         FilesRoutes(Endpoint* ep):GoogleRouteBase(ep){};
             /**

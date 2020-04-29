@@ -9,19 +9,40 @@
 namespace googleQt{
     class ApiEndpoint;
     class Endpoint;
+    class TaskProgress;
+	class ApiClient;
 
+    /**
+        EndpointRunnable - abstruct class for object-based async task classes.
+        Has 'finished' signal and after it's finished it can be either 
+        'complated' or 'failed'
+    */
     class GOOGLEQT_DLLSPEC EndpointRunnable : public QObject
     {
         Q_OBJECT;
     public:
-        EndpointRunnable(ApiEndpoint& ept) :m_endpoint(ept) {}
+        EndpointRunnable(ApiClient* cl);
+        virtual ~EndpointRunnable();
         bool isFinished()const { return m_finished; }
         virtual bool isCompleted()const = 0;
         virtual bool isFailed()const { return (m_failed != nullptr); };        
         bool waitForResult()const;
 
         GoogleException* error();
-        void failed_callback(std::unique_ptr<GoogleException> ex);        
+        void failed_callback(std::unique_ptr<GoogleException> ex);
+
+        virtual void disposeLater();
+
+        void addFinishedDelegate(std::function<void()> finished_callback);
+        void addDisposeDelegate(std::function<void()> dispose_callback);
+
+        TaskProgress* progressNotifier() { return m_progress; }
+        ///task will become owner of the progress
+        TaskProgress* createProgressNotifier();
+        ///task will not own progress, but will be able to update it
+        void delegateProgressNotifier(TaskProgress*);
+        /// detach progress and if we own it, send message to delete
+        void detachProgress();
 
     signals:
         void finished();
@@ -31,18 +52,30 @@ namespace googleQt{
         void waitUntillFinishedOrCancelled();
 
     protected:
-        ApiEndpoint& m_endpoint;
+		std::shared_ptr<ApiClient> m_client;
         bool m_finished{ false };
         mutable bool m_in_wait_loop{ false };
+        mutable bool m_progress_notifier_owner{ false };
         std::unique_ptr<GoogleException> m_failed;
+        std::list<std::function<void()>> m_dispose_delegates;
+        std::list<std::function<void()>> m_finished_delegates;
+        TaskProgress*                m_progress{nullptr};
     };
 
-
+    /**
+        main template async task for results of queries.
+        The actual data is type parameter and can be accessed via
+        1.waitForResultAndRelease - for blocking calls
+        2.'then'-parameters - for async calls, also via 'get'
+    */
     template <class RESULT>
     class GOOGLEQT_DLLSPEC GoogleTask : public EndpointRunnable
     {
         friend class Endpoint;
     public:
+
+        std::unique_ptr<RESULT>&& detachResult() {return std::move(m_completed); }
+
         RESULT* get()
         {
             RESULT* rv = nullptr;
@@ -58,7 +91,7 @@ namespace googleQt{
         ///this function will block execution (via event loop) and return
         ///result object using move semantic via std::unique_ptr in case of success or 
         ///raise exception in case of error
-        ///also this function will schedule dispose of the Task via deleteLater
+        ///also this function will schedule dispose of the Task via disposeLater
         std::unique_ptr<RESULT> waitForResultAndRelease()
         {
             std::unique_ptr<RESULT> res;
@@ -76,18 +109,19 @@ namespace googleQt{
             {
                 std::unique_ptr<GoogleException> ex;
                 ex = std::move(m_failed);
-                deleteLater();
+                disposeLater();
                 if (ex)
                     ex->raise();
             }
-            deleteLater();
+            disposeLater();
             return res;
         };
 
         ///composition of async calls, after async call is finished the user function
         ///is called (if not nullptr) and then task object will be scheduled to autorelease
         void then(std::function<void(std::unique_ptr<RESULT>)> after_completed_processing = nullptr,
-            std::function<void(std::unique_ptr<GoogleException>)> on_error = nullptr)
+            std::function<void(std::unique_ptr<GoogleException>)> on_error = nullptr,
+            std::function<void()> on_dispose = nullptr)
         {
             std::function<void(void)> on_finished_processing = [=]() 
             {
@@ -101,8 +135,12 @@ namespace googleQt{
                         on_error(std::move(m_failed));
                     }
                 }
-                deleteLater();
+                disposeLater();
             };
+
+            if (on_dispose) {
+                addDisposeDelegate(on_dispose);
+            }
 
             if (isFinished()) {
                 on_finished_processing();
@@ -124,10 +162,15 @@ namespace googleQt{
         };
 
     protected:
-        GoogleTask(ApiEndpoint& ept) :EndpointRunnable(ept) {};
+        GoogleTask(ApiClient* cl) :EndpointRunnable(cl) {};
     protected:
         std::unique_ptr<RESULT> m_completed;
     };
+
+    /**
+        GoogleVoidTask - google async task that brings back no data but it
+        can be 'failed' or 'completed'
+    */
 
     class GOOGLEQT_DLLSPEC GoogleVoidTask : public EndpointRunnable
     {
@@ -137,12 +180,13 @@ namespace googleQt{
 
         ///this function will block execution (via event loop) and return
         ///object in case os success or raise exception in case of error
-        ///also this function will schedule dispose of the Task via deleteLater
+        ///also this function will schedule dispose of the Task via disposeLater
         void waitForResultAndRelease();
         ///composition of async calls, after async call is finished the user function
         ///is called (if not nullptr) and then task object will be scheduled to autorelease
         void then(std::function<void()> after_completed_processing = nullptr,
-            std::function<void(std::unique_ptr<GoogleException>)> on_error = nullptr);
+            std::function<void(std::unique_ptr<GoogleException>)> on_error = nullptr,
+            std::function<void()> on_dispose = nullptr);
 
         void completed_callback(void)
         {
@@ -151,9 +195,73 @@ namespace googleQt{
         };
 
     protected:
-        GoogleVoidTask(ApiEndpoint& ept) :EndpointRunnable(ept) {};
+        GoogleVoidTask(ApiClient* cl) :EndpointRunnable(cl) {};
 
     protected:
         bool m_completed = { false };
+    };
+
+    /**
+        TaskAggregator - a utility class to control execution of async
+        tasks. It is async task itself, becomes completed when all added 
+        tasks are completed and failed when any one has failed.
+        The waitForResultAndRelease and 'then' functions used for
+        blocking and async calls, they dispose also controlled tasks.
+        If data is needed from depending tasks they should be moved inside 'then'
+        processing or right after 'waitForResultAndRelease'
+    */
+    class GOOGLEQT_DLLSPEC TaskAggregator : public EndpointRunnable
+    {
+    public:
+        using RUNNABLES = std::list<EndpointRunnable*>;
+
+        TaskAggregator(ApiClient* cl):EndpointRunnable(cl){};
+
+        void add(EndpointRunnable* r) { m_runnables.push_back(r); }
+
+        bool isCompleted()const override;
+        bool isFailed()const override;
+        bool areAllFinished()const;
+
+        void waitForResultAndRelease();
+        void then(std::function<void()> after_completed_processing = nullptr,
+            std::function<void(std::unique_ptr<GoogleException>)> on_error = nullptr,
+            std::function<void()> on_dispose = nullptr);
+
+        void disposeLater()override;
+
+        void completed_callback(void)
+        {
+            notifyOnFinished();
+        };
+
+    protected:
+        RUNNABLES m_runnables;
+    };
+
+    class GOOGLEQT_DLLSPEC TaskProgress : public QObject
+    {
+        Q_OBJECT;
+        /**
+            TaskProgress - for processing list of objects
+            usualy in async context by GoogleTask derived, can be
+            delegated from one task to another
+        */
+    public:
+        int value()const;
+        int maximum()const;
+        QString statusText()const;
+    public slots:
+        void    setValue(int value);
+        void    setMaximum(int maxv, QString statusText);
+    signals:
+        void    valueChanged(int value);
+    protected:
+        int     m_value{0}, m_max{ 0 };
+        QString m_status_text;
+    private:
+        TaskProgress();
+
+        friend class EndpointRunnable;
     };
 };

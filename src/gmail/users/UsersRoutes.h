@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "users"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -15,7 +17,7 @@ namespace googleQt{
 namespace users{
 
 
-    class UsersRoutes: public GoogleRouteBase{
+    class GOOGLEQT_DLLSPEC UsersRoutes: public GoogleRouteBase{
     public:
         UsersRoutes(Endpoint* ep):GoogleRouteBase(ep){};
             /**

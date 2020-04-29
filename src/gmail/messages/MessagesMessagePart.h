@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "messages"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -12,7 +14,7 @@
 
 namespace googleQt{
 namespace messages{
-    class MessagePart{
+    class GOOGLEQT_DLLSPEC MessagePart{
         /**
             field: part_id: ID of the part
             field: mime_type: mime type: text/plain, text/html
@@ -25,6 +27,7 @@ namespace messages{
         MessagePart(){};
 
         MessagePart(const QString& arg){ m_partId = arg; };
+        virtual ~MessagePart(){};
 
     public:
             /**
@@ -48,8 +51,8 @@ namespace messages{
             /**
                 list of headers in the part
             */
-        const std::list <MessagePayloadHeader>& headers()const{return m_headers;};
-        MessagePart& setHeaders(const std::list <MessagePayloadHeader>& arg){m_headers=arg;return *this;};
+        const std::vector<MessagePayloadHeader>& headers()const{return m_headers;};
+        MessagePart& setHeaders(const std::vector<MessagePayloadHeader>& arg){m_headers=arg;return *this;};
 
             /**
                 body of the message
@@ -95,7 +98,7 @@ namespace messages{
             /**
                 list of headers in the part
             */
-        std::list <MessagePayloadHeader> m_headers;
+        std::vector<MessagePayloadHeader> m_headers;
 
             /**
                 body of the message

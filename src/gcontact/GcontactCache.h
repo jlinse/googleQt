@@ -1,194 +1,461 @@
 #pragma once
-#include <QDomDocument>
-#include <QDomNodeList>
+#include "GcontactCacheUtil.h"
+#include "GcontactParts.h"
 
-#include "google/endpoint/ApiUtil.h"
 
 namespace googleQt {
+    class GcontactRoutes;
+	class GoogleClient;
+
+    namespace mail_cache {
+        class GMailSQLiteStorage;
+    };
+
     namespace gcontact {
-        
-        /**
-           basic xml parsing product, can be invalid
-         */
-        class GOOGLEQT_DLLSPEC ContactInfoPart
-        {
-        public:
-            operator bool()const { return !m_is_null; }
-            bool isNull()const {return m_is_null;}
-
-        protected:
-            bool    m_is_null{ true };
-        };
-
-        /**
-           name - full, given, family
-         */
-        class GOOGLEQT_DLLSPEC NameInfo: public ContactInfoPart
-        {    
-        public:
-
-            QString fullName()const { return m_fullName; };
-            QString givenName()const { return m_givenName; };
-            QString familyName()const { return m_familyName; };
-
-
-            static NameInfo parse(QDomNode n);
-            operator QString ()const;
-            QString toString()const;
-
-        protected:
-            QString m_fullName;
-            QString m_givenName;
-            QString m_familyName;
-        };
-
-        /**
-            organization details - name, title
-        */
-        class GOOGLEQT_DLLSPEC OrganizationInfo : public ContactInfoPart
-        {
-        public:
-            QString name()const { return m_name; }
-            QString title()const { return m_title; }
-
-            static OrganizationInfo parse(QDomNode n);
-            operator QString ()const;
-            QString toString()const;
-
-        protected:
-            QString m_name;
-            QString m_title;
-        };
-
-        /**
-            single phone details
-        */
-        class GOOGLEQT_DLLSPEC PhoneInfo : public ContactInfoPart
-        {
-        public:
-
-            QString number()const { return m_number; };
-            QString uri()const { return m_uri; };
-            QString typeLabel()const { return m_type_label; };
-            bool isPrimary()const { return m_is_primary; }
-
-            operator QString ()const;
-            QString toString()const;
-
-        protected:
-            QString m_number;
-            QString m_uri;
-            QString m_type_label;
-            bool    m_is_primary{false};
-            friend class PhoneInfoList;
-        };
-
-        /**
-        single email details
-        */
-        class GOOGLEQT_DLLSPEC EmailInfo : public ContactInfoPart
-        {
-        public:
-
-            QString address()const { return m_address; };
-            QString displayName()const { return m_display_name; };
-            QString typeLabel()const { return m_type_label; };
-            bool isPrimary()const { return m_is_primary; }
-
-            operator QString ()const;
-            QString toString()const;
-
-        protected:
-            QString m_address;
-            QString m_display_name;
-            QString m_type_label;
-            bool    m_is_primary{ false };
-            friend class EmailInfoList;
-        };
-
-        /**
-        list of emails
-        */
-        class GOOGLEQT_DLLSPEC EmailInfoList : public ContactInfoPart
-        {
-        public:
-            using EMAILS_ARR = std::vector<EmailInfo>;
-
-            static EmailInfoList parse(QDomNode n);
-            operator QString ()const;
-            QString toString()const;
-            QString toXmlString()const;
-        protected:
-            EMAILS_ARR m_emails;
-        };
-
-        /**
-            list of phones
-        */
-        class GOOGLEQT_DLLSPEC PhoneInfoList : public ContactInfoPart
-        {
-        public:
-            using PHONES_ARR = std::vector<PhoneInfo>;
-
-            static PhoneInfoList parse(QDomNode n);
-            operator QString ()const;
-            QString toString()const;
-            QString toXmlString()const;
-        protected:
-            PHONES_ARR m_phones;
-        };
+        class GContactCache;
+        class BatchRequestContactInfo;
+        class BatchRequestGroupInfo;
 
         /**
             single contact entry
         */
-        class GOOGLEQT_DLLSPEC ContactInfo : public ContactInfoPart
+        class GOOGLEQT_DLLSPEC ContactInfo : public ContactXmlPersistant
         {
         public:
 
-            QString etag()const { return m_etag; }
-            QString id()const { return m_id; }
-            QString title()const { return m_title; }
-            QString content()const { return m_content; }
-            const QDateTime& updated()const { return m_updated; }
+            using ptr = std::shared_ptr<ContactInfo>;
 
+            const EmailInfoList&       emails()const { return m_emails; }
             const PhoneInfoList&       phones()const { return m_phones; }
             const NameInfo&            name()const { return m_name; }
             const OrganizationInfo&    organization()const { return m_organization; }
+            const PostalAddressList&   addresses()const { return m_address_list; }            
+            const PhotoInfo&           photo()const { return m_photo; }
+            const GroupMembershipInfoList& groups()const { return m_mgroups; }
+            const UserDefinedFieldInfoList& userFields()const { return m_user_def_fields; }
 
-            bool parse(QDomNode n);
-            operator QString ()const;
+            /// Ref-function return non-const references and can be used
+            /// to modify objects. call ContactInfo::markAsModified to stage
+            /// object ready for storing into database and storeContactsToDb to save
+            EmailInfoList&       emailsRef(){ return m_emails; }
+            PhoneInfoList&       phonesRef(){ return m_phones; }
+            NameInfo&            nameRef(){ return m_name; }
+            OrganizationInfo&    organizationRef(){ return m_organization; }
+            PostalAddressList&   addressesRef(){ return m_address_list; }
+            GroupMembershipInfoList& groupsRef() { return m_mgroups; }
+            UserDefinedFieldInfoList& userFieldsRef() { return m_user_def_fields; }
+
+            /**
+                set title
+            */
+            ContactInfo& setTitle(QString val);
+
+            /**
+                set notes
+            */
+            ContactInfo& setContent(QString notes);
+
+            /**
+                set name details
+            */
+            ContactInfo& setName(const NameInfo& n);
+
+            /**
+                add new email account
+            */
+            ContactInfo& addEmail(const EmailInfo& e);
+
+            /**
+                delete old emails and add new
+            */
+            ContactInfo& replaceEmails(const std::vector<EmailInfo>& lst);
+
+            /**
+                add new phone info
+            */
+            ContactInfo& addPhone(const PhoneInfo& p);
+
+            /**
+                delete old phone and add new
+            */
+            ContactInfo& replacePhones(const std::vector<PhoneInfo>& lst);
+
+            /**
+                set organization information
+            */
+            ContactInfo& setOrganizationInfo(const OrganizationInfo& o);
+
+            /**
+                add new address info
+            */
+            ContactInfo& addAddress(const PostalAddress& p);
+
+            /**
+            add group
+            */
+            ContactInfo& addGroup(const GroupMembershipInfo& p);
+
+            /**
+            replace groups with new ids
+            */
+            ContactInfo& setGroups(QString userId, const STRING_LIST& groupIdlist);
+
+            /**
+                delete old address list and put a new one
+            */
+            ContactInfo& replaceAddressList(const std::vector<PostalAddress>& lst);
+            
+            /**
+            add user field
+            */
+            ContactInfo& addUserField(const UserDefinedFieldInfo& f);
+
+            static std::unique_ptr<ContactInfo> createWithId(QString contact_id);
+			std::unique_ptr<ContactInfo> cloneWithId(QString contact_id);
+
+            bool parseEntryNode(QDomNode n)override;
+            void mergeEntryNode(QDomDocument& doc, QDomNode& entry_node)const override;
+            bool setFromDbRecord(QSqlQuery* q);
+
             QString toString()const;
-            QString toXmlString()const;
-            bool parseXml(const QByteArray & data);
+            QString toXml(QString userEmail)const;
+            
+            void assignContent(const ContactInfo& src);
+
+            bool operator==(const ContactInfo&) const;
+            bool operator!=(const ContactInfo&) const;
+
+            std::unique_ptr<BatchRequestContactInfo> buildBatchRequest(googleQt::EBatchId batch_id);
+
+            void markPhotoAsResolved();
+            void markPhotoAsModified();
+            bool isPhotoResolved()const;
+            bool isPhotoModified()const;
+
+			std::unique_ptr<ContactInfo> clone()const;
+
+#ifdef API_QT_AUTOTEST
+            static std::unique_ptr<ContactInfo> EXAMPLE(int context_index, int parent_content_index);
+#endif //API_QT_AUTOTEST
 
         protected:
-            QString m_etag, m_id, m_title, m_content;
-            QDateTime           m_updated;
-            EmailInfoList       m_emails;
-            PhoneInfoList       m_phones;
+            virtual QString toXmlBegin()const;
+
+        protected:
             NameInfo            m_name;
             OrganizationInfo    m_organization;
+            EmailInfoList       m_emails;
+            PhoneInfoList       m_phones;            
+            PostalAddressList   m_address_list;            
+            PhotoInfo           m_photo;
+            GroupMembershipInfoList  m_mgroups;
+            UserDefinedFieldInfoList m_user_def_fields;
         };
 
         /**
-            list of all contacts
+            single contact group
         */
-        class GOOGLEQT_DLLSPEC ContactList
+        class GOOGLEQT_DLLSPEC GroupInfo : public ContactXmlPersistant
         {
         public:
-            using CONTACTS_ARR = std::vector<ContactInfo>;
 
-            const CONTACTS_ARR& contacts()const { return m_contacts; }
+            using ptr = std::shared_ptr<GroupInfo>;
 
-            bool parseXml(const QByteArray & data);
-            QString toString(bool multiline = true)const;
+            /**
+            set title
+            */
+            GroupInfo& setTitle(QString val);
+
+            /**
+            set notes
+            */
+            GroupInfo& setContent(QString notes);
+
+            /**
+                in case of regular group it's just the title
+                in case of system group we trim away system prefix
+            */
+            QString displayTitle()const;
+
+            bool isSystemGroup()const {return m_issystem_group;};
+
+            QString toString()const;
+            QString toXml(QString userEmail)const;
+            bool parseEntryNode(QDomNode n)override;
+            void mergeEntryNode(QDomDocument& doc, QDomNode& entry_node)const override;
+            bool setFromDbRecord(QSqlQuery* q);
+
+            bool operator==(const GroupInfo&) const;
+            bool operator!=(const GroupInfo&) const;
+
+            void assignContent(const GroupInfo& src);
+
+            std::unique_ptr<GroupInfo> clone()const;
+            ///this function is useless for regular GContacts interaction, since server should generate ID
+            ///but we can use it maintain local GContacts-style replicas
+            static std::unique_ptr<GroupInfo> createWithId(QString group_id);
+
+            std::unique_ptr<BatchRequestGroupInfo> buildBatchRequest(googleQt::EBatchId batch_id);
+
+#ifdef API_QT_AUTOTEST
+            static std::unique_ptr<GroupInfo> EXAMPLE(int context_index, int parent_content_index);
+#endif //API_QT_AUTOTEST
 
         protected:
-            CONTACTS_ARR m_contacts;
-        };        
+            virtual QString toXmlBegin()const;
+            void            setupTitle(QString title);
+        protected:
+            bool    m_issystem_group{false};
+            QString m_display_title;
+        };
+
+        class GOOGLEQT_DLLSPEC BatchRequestContactInfo : public ContactInfo,
+                                        public BatchRequest
+        {
+        public:
+            static std::unique_ptr<BatchRequestContactInfo> buildRequest(QString contact_id, googleQt::EBatchId batch_id);
+        protected:
+            QString toXmlBegin()const override;
+
+        };
+
+        class GOOGLEQT_DLLSPEC BatchRequestGroupInfo :   public GroupInfo,
+                                        public BatchRequest
+        {
+        public:
+            static std::unique_ptr<BatchRequestGroupInfo> buildRequest(QString group_id, googleQt::EBatchId batch_id);
+        protected:
+            QString toXmlBegin()const override;
+        };
+
+        class GOOGLEQT_DLLSPEC BatchResultContactInfo : public ContactInfo,
+                                       public BatchResult
+        {
+        public:
+            bool parseEntryNode(QDomNode n)override;
+        };
+
+        class GOOGLEQT_DLLSPEC BatchResultGroupInfo : public GroupInfo,
+                                    public BatchResult
+        {
+        public:
+            bool parseEntryNode(QDomNode n)override;
+        };
+
+        ///contacts batch request
+        class GOOGLEQT_DLLSPEC BatchRequesContactList : public InfoList<BatchRequestContactInfo> {};
+
+        ///group batch request
+        class GOOGLEQT_DLLSPEC BatchRequesGroupList : public InfoList<BatchRequestGroupInfo> {};
+
+
+        ///list of all contacts
+        class GOOGLEQT_DLLSPEC ContactList : public BatchBuilderInfoList<ContactInfo, BatchRequesContactList>
+        {
+        public:
+            /// this is special case of 'limbo' contact - we created it locally, it has DBID, we sent requiest
+            /// to server and server assigned cloudID - we have to link cloudID to the contact and update local cache
+            ContactInfo::ptr findNewCreated(std::shared_ptr<BatchResultContactInfo> b);
+            
+            STRING_LIST buildUnresolvedPhotoIdList();
+            STRING_LIST buildModifiedPhotoIdList();
+
+            class factory {
+            public:
+                static std::unique_ptr<ContactList>  create(const QByteArray& data);
+            };
+#ifdef API_QT_AUTOTEST
+            static std::unique_ptr<ContactList> EXAMPLE(int context_index, int parent_context_index);
+#endif //API_QT_AUTOTEST
+        };
+        
+        ///list of all contact groups
+        class GOOGLEQT_DLLSPEC GroupList : public BatchBuilderInfoList<GroupInfo, BatchRequesGroupList>
+        {
+        public:
+            /// this is special case of 'limbo' group - we created it locally, it has DBID, we sent requiest
+            /// to server and server assigned cloudID - we have to link cloudID to the contact and update local cache
+            GroupInfo::ptr findNewCreated(std::shared_ptr<BatchResultGroupInfo> b);
+
+            class factory {
+            public:
+                static std::unique_ptr<GroupList>  create(const QByteArray& data);
+            };
+#ifdef API_QT_AUTOTEST
+            static std::unique_ptr<GroupList> EXAMPLE(int context_index, int parent_context_index);
+#endif //API_QT_AUTOTEST
+        };
+
+        ///contacts batch result
+        class GOOGLEQT_DLLSPEC BatchContactList : public InfoList<BatchResultContactInfo> 
+        {
+        public:
+            class factory {
+            public:
+                static std::unique_ptr<BatchContactList>  create(const QByteArray& data);
+            };
+
+#ifdef API_QT_AUTOTEST
+            static std::unique_ptr<BatchContactList> EXAMPLE(int context_index, int parent_context_index);
+#endif //API_QT_AUTOTEST
+        };
+
+
+        ///groups batch result
+        class GOOGLEQT_DLLSPEC BatchGroupList : public InfoList<BatchResultGroupInfo> 
+        {
+        public:
+            class factory {
+            public:
+                static std::unique_ptr<BatchGroupList>  create(const QByteArray& data);
+            };
+
+#ifdef API_QT_AUTOTEST
+            static std::unique_ptr<BatchGroupList> EXAMPLE(int context_index, int parent_context_index);
+#endif //API_QT_AUTOTEST
+        };
+
+        /**
+            contacts DB storage
+        */
+        class GOOGLEQT_DLLSPEC GContactCacheBase
+        {
+        public:
+            GContactCacheBase();
+            virtual ~GContactCacheBase(){}
+            
+			virtual QString		metaPrefix()const = 0;			
+			virtual QSqlQuery*	prepareContactQuery(QString sql) = 0;
+			virtual bool		execContactQuery(QString sql) = 0;
+			virtual QSqlQuery*	selectContactQuery(QString sql) = 0;
+			virtual QString		contactCacheDir()const = 0;
+			virtual QString		accountEmail()const = 0;
+
+			virtual void attachSQLStorage(mail_cache::GMailSQLiteStorage* ) {};
+
+            ContactList& contacts() { return m_contacts; }
+            const ContactList& contacts()const { return m_contacts; }
+
+            GroupList& groups() { return m_groups; }
+            const GroupList& groups()const { return m_groups; }
+
+            const QDateTime& lastSyncTime()const { return m_sync_time; }
+
+            bool storeContactsToDb();
+            bool loadContactsFromDb();
+            bool clearDbCache();
+
+            bool mergeServerModifications(GroupList& server_glist, ContactList& server_clist);
+            QString getPhotoMediaPath(QString contactId, bool ensurePath = false)const;
+            bool addPhoto(ContactInfo::ptr c, QString photoFileName);
+
+			void setEnableContactsConfigTable(bool val) { m_enable_contacts_config_table = val;}
+			bool ensureContactTables();
+			ContactsReplicaSyncResult synchronizeContactsReplica(GContactCacheBase* remoteMasterContacts);
+        protected:
+            bool storeContactGroups();
+            bool storeContactEntries();
+            bool storeConfig();
+
+            bool loadContactGroupsFromDb();
+            bool loadContactEntriesFromDb();
+            bool loadContactConfigFromDb();
+            bool storeContactList(std::vector<std::shared_ptr<ContactInfo>>& contact_list);
+            bool storeGroupList(std::vector<std::shared_ptr<GroupInfo>>& group_list);            
+        protected:
+            ContactList m_contacts;
+            GroupList m_groups;
+            std::map<QString, QString> m_configs;
+            QDateTime		m_sync_time;
+			bool			m_enable_contacts_config_table{true};
+        };
+
+		class GOOGLEQT_DLLSPEC GContactCache: public GContactCacheBase
+		{
+		public:
+			GContactCache(googleQt::GoogleClient& gc);
+			virtual QString metaPrefix()const override;
+			QSqlQuery*	prepareContactQuery(QString sql) override;
+			bool		execContactQuery(QString sql)override;
+			QSqlQuery*	selectContactQuery(QString sql)override;
+			QString		contactCacheDir()const override;
+			virtual QString		accountEmail()const override;
+			void attachSQLStorage(mail_cache::GMailSQLiteStorage* ss)override;
+			mail_cache::GMailSQLiteStorage* sql_storage() { return m_sql_storage; };
+		protected:
+			GoogleClient& m_gc;
+			mail_cache::GMailSQLiteStorage* m_sql_storage{ nullptr };
+			friend class GcontactCacheRoutes;
+		};
+
+        class GOOGLEQT_DLLSPEC GcontactCacheSyncTask : public GoogleVoidTask 
+        {
+        public:
+            const ContactList*      loadedContacts()const{return m_loaded_contacts.get();}
+            const GroupList*        loadedGroups()const{return m_loaded_groups.get();}
+            const BatchContactList* updatedContacts()const{return m_updated_contacts.get();}
+            const BatchGroupList*   updatedGroups()const{return m_updated_groups.get();}
+            const std::map<QString, std::shared_ptr<BatchRequestGroupInfo>>& deleted_groups()const{return m_deleted_groups;}
+        protected:
+            GcontactCacheSyncTask(ApiClient* cl) :GoogleVoidTask(cl){}
+            std::unique_ptr<ContactList>      m_loaded_contacts;
+            std::unique_ptr<GroupList>        m_loaded_groups;
+            std::unique_ptr<BatchContactList> m_updated_contacts;
+            std::unique_ptr<BatchGroupList>   m_updated_groups;
+            std::map<QString, std::shared_ptr<BatchRequestGroupInfo>> m_deleted_groups;
+            friend class GcontactCacheRoutes;
+        };
+        
+        class GOOGLEQT_DLLSPEC PhotoSyncTask : public GoogleVoidTask
+        {
+        public:
+            const STRING_LIST& downloaded()const { return m_downloaded_ids; }
+            const STRING_LIST& uploaded()const { return m_uploaded_ids; }
+        private:
+            PhotoSyncTask(ApiClient* cl) :GoogleVoidTask(cl) {}
+            STRING_LIST m_downloaded_ids;
+            STRING_LIST m_uploaded_ids;
+            friend class GcontactCacheRoutes;
+        };
+
+
+        class GOOGLEQT_DLLSPEC GcontactCacheRoutes : public QObject
+        {
+            Q_OBJECT
+        public:
+            GcontactCacheRoutes(googleQt::Endpoint& endpoint, GcontactRoutes& gcontact_routes);
+
+            GcontactCacheSyncTask*  synchronizeContacts_Async();
+            PhotoSyncTask*          synchronizePhotos_Async();
+            GoogleTask<QString>*    getContactCachePhoto_Async(ContactInfo::ptr c);
+
+#ifdef API_QT_AUTOTEST
+            void runAutotest();
+#endif
+        protected:
+            void reloadCache_Async(GcontactCacheSyncTask* rv, QDateTime dtUpdatedMin);
+            void applyLocalContacEntriesModifications_Async(GcontactCacheSyncTask* rv);
+        protected:
+            Endpoint&						m_endpoint;
+            GcontactRoutes&					m_c_routes;
+
+        private:
+            class PhotoListTask : public GoogleVoidTask
+            {
+            public:
+                const STRING_LIST& completed()const { return m_completed_ids; }
+            private:
+                PhotoListTask(ApiClient* cl) :GoogleVoidTask(cl) {}
+                STRING_LIST m_completed_ids;
+                friend class GcontactCacheRoutes;
+            };
+
+            template <class PROCESSOR>
+            PhotoListTask*      transferPhotos_Async(const STRING_LIST& id_list);
+            PhotoListTask*      downloadPhotos_Async();
+            PhotoListTask*      uploadPhotos_Async();
+        };
 
     };//gcontact
 };
 
-QDebug operator << (QDebug d, const googleQt::gcontact::ContactList &lst);
-std::ostream &operator<<(std::ostream &os, const googleQt::gcontact::ContactList& lst);

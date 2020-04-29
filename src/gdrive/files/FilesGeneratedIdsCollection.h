@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "files"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -10,7 +12,7 @@
 
 namespace googleQt{
 namespace files{
-    class GeneratedIdsCollection{
+    class GOOGLEQT_DLLSPEC GeneratedIdsCollection{
         /**
             field: kind: This is always drive#generatedIds.
             field: space: The type of file that can be created with these IDs.
@@ -27,6 +29,7 @@ namespace files{
         GeneratedIdsCollection(const QString& arg):
         m_kind("drive#generatedIds")
         { m_kind = arg; };
+        virtual ~GeneratedIdsCollection(){};
 
     public:
             /**
@@ -46,8 +49,8 @@ namespace files{
                 The IDs generated for the requesting user in the specified
                 space.
             */
-        const std::list <QString>& ids()const{return m_ids;};
-        GeneratedIdsCollection& setIds(const std::list <QString>& arg){m_ids=arg;return *this;};
+        const std::vector<QString>& ids()const{return m_ids;};
+        GeneratedIdsCollection& setIds(const std::vector<QString>& arg){m_ids=arg;return *this;};
 
     public:
         operator QJsonObject ()const;
@@ -84,7 +87,7 @@ namespace files{
                 The IDs generated for the requesting user in the specified
                 space.
             */
-        std::list <QString> m_ids;
+        std::vector<QString> m_ids;
 
     };//GeneratedIdsCollection
 

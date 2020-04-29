@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "history"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -65,10 +67,12 @@ std::unique_ptr<LabelHistoryRecord> LabelHistoryRecord::EXAMPLE(int context_inde
     example_idx++;
     std::unique_ptr<LabelHistoryRecord> rv(new LabelHistoryRecord);
     rv->m_message = *(messages::MessageResource::EXAMPLE(0, context_index).get());
-    std::list<QString> list_of_labelIds;
+    std::vector<QString> list_of_labelIds;
     for(int i = 0; i < 5; i++){
         rv->m_labelIds.push_back(QString("id_%1").arg(i+1));
     }
+    QString tmp_m_labelIds = ApiAutotest::INSTANCE().getString4List("history::LabelHistoryRecord", "m_labelIds");
+    if(!tmp_m_labelIds.isEmpty())rv->m_labelIds.push_back(tmp_m_labelIds);
     return rv;
 }
 #endif //API_QT_AUTOTEST

@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "comments"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -13,7 +15,7 @@
 
 namespace googleQt{
 namespace comments{
-    class Comment{
+    class GOOGLEQT_DLLSPEC Comment{
         /**
             field: id: The ID of the comment.
             field: kind: This is always drive#comment.
@@ -53,6 +55,7 @@ namespace comments{
         ,m_deleted(false)
         ,m_resolved(false)
         { m_id = arg; };
+        virtual ~Comment(){};
 
     public:
             /**
@@ -131,8 +134,8 @@ namespace comments{
             /**
                 The full list of replies to the comment in chronological order.
             */
-        const std::list <Reply>& replies()const{return m_replies;};
-        Comment& setReplies(const std::list <Reply>& arg){m_replies=arg;return *this;};
+        const std::vector<Reply>& replies()const{return m_replies;};
+        Comment& setReplies(const std::vector<Reply>& arg){m_replies=arg;return *this;};
 
     public:
         operator QJsonObject ()const;
@@ -219,7 +222,7 @@ namespace comments{
             /**
                 The full list of replies to the comment in chronological order.
             */
-        std::list <Reply> m_replies;
+        std::vector<Reply> m_replies;
 
     };//Comment
 

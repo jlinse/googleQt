@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "drafts"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -11,7 +13,7 @@
 
 namespace googleQt{
 namespace drafts{
-    class DraftResource{
+    class GOOGLEQT_DLLSPEC DraftResource{
         /**
             field: id: The immutable ID of the draft.
             field: message: The message content of the draft.
@@ -21,6 +23,7 @@ namespace drafts{
         DraftResource(){};
 
         DraftResource(const QString& arg){ m_id = arg; };
+        virtual ~DraftResource(){};
 
     public:
             /**

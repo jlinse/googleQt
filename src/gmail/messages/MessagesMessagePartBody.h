@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "messages"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -10,7 +12,7 @@
 
 namespace googleQt{
 namespace messages{
-    class MessagePartBody{
+    class GOOGLEQT_DLLSPEC MessagePartBody{
         /**
             field: size: Total number of bytes in the body of the message part.
             field: data: The body data of a MIME message part. May be empty for
@@ -27,6 +29,7 @@ namespace messages{
         MessagePartBody(){};
 
         MessagePartBody(const quint64& arg){ m_size = arg; };
+        virtual ~MessagePartBody(){};
 
     public:
             /**

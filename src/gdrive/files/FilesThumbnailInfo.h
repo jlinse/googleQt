@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "files"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -10,7 +12,7 @@
 
 namespace googleQt{
 namespace files{
-    class ThumbnailInfo{
+    class GOOGLEQT_DLLSPEC ThumbnailInfo{
         /**
             field: image: The thumbnail data encoded with URL-safe Base64 (RFC
                 4648 section 5).
@@ -21,6 +23,7 @@ namespace files{
         ThumbnailInfo(){};
 
         ThumbnailInfo(const QByteArray& arg){ m_image = arg; };
+        virtual ~ThumbnailInfo(){};
 
     public:
             /**

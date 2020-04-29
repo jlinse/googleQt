@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "revisions"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -10,7 +12,7 @@
 
 namespace googleQt{
 namespace revisions{
-    class UpdateRevisionDetails{
+    class GOOGLEQT_DLLSPEC UpdateRevisionDetails{
         /**
             field: keep_forever: Whether to keep this revision forever, even if
                 it is no longer the head revision. If not set, the revision will
@@ -30,6 +32,7 @@ namespace revisions{
         UpdateRevisionDetails(){};
 
         UpdateRevisionDetails(const bool& arg){ m_keepForever = arg; };
+        virtual ~UpdateRevisionDetails(){};
 
     public:
             /**

@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "messages"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -16,7 +18,7 @@ namespace googleQt{
 namespace messages{
 
 
-    class MessagesRoutes: public GoogleRouteBase{
+    class GOOGLEQT_DLLSPEC MessagesRoutes: public GoogleRouteBase{
     public:
         MessagesRoutes(Endpoint* ep):GoogleRouteBase(ep){};
             /**

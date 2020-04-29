@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "drafts"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -11,7 +13,7 @@
 
 namespace googleQt{
 namespace drafts{
-    class DraftListRes{
+    class GOOGLEQT_DLLSPEC DraftListRes{
         /**
             field: drafts: List of drafts.
             field: next_page_token: Token to retrieve the next page of results
@@ -22,14 +24,15 @@ namespace drafts{
     public:
         DraftListRes(){};
 
-        DraftListRes(const std::list <DraftResource>& arg){ m_drafts = arg; };
+        DraftListRes(const std::vector<DraftResource>& arg){ m_drafts = arg; };
+        virtual ~DraftListRes(){};
 
     public:
             /**
                 List of drafts.
             */
-        const std::list <DraftResource>& drafts()const{return m_drafts;};
-        DraftListRes& setDrafts(const std::list <DraftResource>& arg){m_drafts=arg;return *this;};
+        const std::vector<DraftResource>& drafts()const{return m_drafts;};
+        DraftListRes& setDrafts(const std::vector<DraftResource>& arg){m_drafts=arg;return *this;};
 
             /**
                 Token to retrieve the next page of results in the list.
@@ -66,7 +69,7 @@ namespace drafts{
             /**
                 List of drafts.
             */
-        std::list <DraftResource> m_drafts;
+        std::vector<DraftResource> m_drafts;
 
             /**
                 Token to retrieve the next page of results in the list.

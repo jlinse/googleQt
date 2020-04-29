@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "threads"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -73,7 +75,7 @@ std::unique_ptr<ThreadResource> ThreadResource::EXAMPLE(int context_index, int p
     rv->m_id = ApiAutotest::INSTANCE().getId("threads::ThreadResource", example_idx);
     rv->m_snipped = ApiAutotest::INSTANCE().getString("threads::ThreadResource", "m_snipped", QString("snipped_%1").arg(example_idx));
     rv->m_historyId = ApiAutotest::INSTANCE().getInt("threads::ThreadResource", "m_historyId", 3 + example_idx);
-    std::list<messages::MessageResource> list_of_messages;
+    std::vector<messages::MessageResource> list_of_messages;
     for(int i = 0; i < 5; i++){
         messages::MessageResource p = *(messages::MessageResource::EXAMPLE(i, context_index).get());
         ApiAutotest::INSTANCE().prepareAutoTestObj("threads::ThreadResource", "messages::MessageResource", &p, i, context_index);

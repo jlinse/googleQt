@@ -107,9 +107,9 @@ void ListArg::build(const QString& link_path, QUrl& url)const
 
 
 HistoryListArg::HistoryListArg(QString userId, int startHistoryId):
+    m_startHistoryId(startHistoryId),
     m_userId(userId),
-    m_maxResults(50),
-    m_startHistoryId(startHistoryId)
+    m_maxResults(50)    
 {
 
 };
@@ -118,13 +118,18 @@ void HistoryListArg::build(const QString& link_path, QUrl& url)const
 {
     UrlBuilder b(link_path, url);
     b.add("startHistoryId", m_startHistoryId)
-        .add("pageToken", m_pageToken);
+        .add("pageToken", m_pageToken)
+        .add("historyTypes", m_historyTypes)
+        .add("labelId", m_labelId)
+        .add("maxResults", m_maxResults);
+    /*
     if (m_labelIds.size() > 0) {
         for (QStringList::const_iterator i = m_labelIds.cbegin(); i != m_labelIds.cend(); i++)
             {
                 b.add("labelIds", *i);
             }
     }
+    */
 }
 
 
@@ -246,7 +251,7 @@ SendMimeMessageArg::SendMimeMessageArg(QString from,
     addBodyPart(pt_html);
 };
 
-void SendMimeMessageArg::addAttachments(const std::list<QString>& attachments) 
+void SendMimeMessageArg::addAttachments(const STRING_LIST& attachments) 
 {
     for (auto& i : attachments) {
         if (QFile::exists(i)) {
@@ -280,6 +285,15 @@ QByteArray SendMimeMessageArg::toRfc822()const
     rv =  QString("From: %1\r\n").arg(m_From).toStdString().c_str();
     rv += QString("To: %1\r\n").arg(m_To);
     rv += QString("Subject: %1\r\n").arg(m_Subject);
+    QString ref_str = m_references;
+    if (!m_InReplyToMsgId.isEmpty()) {
+        rv += QString("In-Reply-To: <%1@mail.gmail.com>\r\n").arg(m_InReplyToMsgId);
+        ref_str += QString("<%1@mail.gmail.com>").arg(m_InReplyToMsgId);
+    }
+    
+    if (!ref_str.isEmpty()) {
+        rv += QString("References: %1\r\n").arg(ref_str);
+    }
     rv += QString("MIME-Version: 1.0\r\n");
     rv += QString("Content-Type: multipart/alternative; boundary=\"%1\"\r\n\r\n").arg(boundary);
     for (auto& p : m_body_parts)
@@ -310,7 +324,10 @@ void SendMimeMessageArg::toJson(QJsonObject& js)const
 {
     QByteArray data(toRfc822());
     QString res = data.toBase64(QByteArray::Base64UrlEncoding);
-    js["raw"] = res;    
+    js["raw"] = res;
+    if (!m_threadId.isEmpty()) {
+        js["threadId"] = m_threadId;
+    }
 };
 
 SendMimeMessageArg::operator QJsonObject()const {
@@ -388,7 +405,7 @@ std::unique_ptr<ListArg> ListArg::EXAMPLE(int, int)
 std::unique_ptr<ModifyMessageArg> ModifyMessageArg::EXAMPLE(int, int)
 {
     std::unique_ptr<ModifyMessageArg> rv(new ModifyMessageArg(ApiAutotest::INSTANCE().userId(), "id123"));
-    std::list <QString> add_label, remove_label;
+    std::vector <QString> add_label, remove_label;
     add_label.push_back("LABEL_ADD_1");
     add_label.push_back("LABEL_ADD_2");
     remove_label.push_back("LABEL_DEL_1");
@@ -403,7 +420,10 @@ std::unique_ptr<HistoryListArg> HistoryListArg::EXAMPLE(int, int)
     std::unique_ptr<HistoryListArg> rv(new HistoryListArg(ApiAutotest::INSTANCE().userId()));
     rv->setMaxResults(10);
     rv->setPageToken("nextToken");
-    rv->labels() = QString("hlabel1 hlabel2 hlabel3").split(" ");
+    rv->setLabelId("hlabel1");
+    rv->setMaxResults(100);
+    rv->setHistoryTypes("messageAdded");
+    //rv->labels() = QString("hlabel1 hlabel2 hlabel3").split(" ");
     return rv; 
 };
 

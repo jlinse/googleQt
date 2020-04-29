@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "files"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -11,7 +13,7 @@
 
 namespace googleQt{
 namespace files{
-    class CreateFileDetails{
+    class GOOGLEQT_DLLSPEC CreateFileDetails{
         /**
             field: id: The ID of the file.
             field: mime_type: The MIME type of the file. Drive will attempt to
@@ -43,6 +45,7 @@ namespace files{
         CreateFileDetails(const QString& arg):
         m_starred(false)
         { m_id = arg; };
+        virtual ~CreateFileDetails(){};
 
     public:
             /**
@@ -93,8 +96,8 @@ namespace files{
                 directly in the My Drive folder. Update requests must use the
                 addParents and removeParents parameters to modify the values.
             */
-        const std::list <QString>& parents()const{return m_parents;};
-        CreateFileDetails& setParents(const std::list <QString>& arg){m_parents=arg;return *this;};
+        const std::vector<QString>& parents()const{return m_parents;};
+        CreateFileDetails& setParents(const std::vector<QString>& arg){m_parents=arg;return *this;};
 
             /**
                 Whether the user has starred the file.
@@ -164,7 +167,7 @@ namespace files{
                 directly in the My Drive folder. Update requests must use the
                 addParents and removeParents parameters to modify the values.
             */
-        std::list <QString> m_parents;
+        std::vector<QString> m_parents;
 
             /**
                 Whether the user has starred the file.

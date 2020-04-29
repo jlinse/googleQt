@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "threads"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -11,7 +13,7 @@
 
 namespace googleQt{
 namespace threads{
-    class ThreadListRes{
+    class GOOGLEQT_DLLSPEC ThreadListRes{
         /**
             field: threads: List of threads.
             field: next_page_token: Token to retrieve the next page of results
@@ -22,14 +24,15 @@ namespace threads{
     public:
         ThreadListRes(){};
 
-        ThreadListRes(const std::list <ThreadResource>& arg){ m_threads = arg; };
+        ThreadListRes(const std::vector<ThreadResource>& arg){ m_threads = arg; };
+        virtual ~ThreadListRes(){};
 
     public:
             /**
                 List of threads.
             */
-        const std::list <ThreadResource>& threads()const{return m_threads;};
-        ThreadListRes& setThreads(const std::list <ThreadResource>& arg){m_threads=arg;return *this;};
+        const std::vector<ThreadResource>& threads()const{return m_threads;};
+        ThreadListRes& setThreads(const std::vector<ThreadResource>& arg){m_threads=arg;return *this;};
 
             /**
                 Token to retrieve the next page of results in the list.
@@ -66,7 +69,7 @@ namespace threads{
             /**
                 List of threads.
             */
-        std::list <ThreadResource> m_threads;
+        std::vector<ThreadResource> m_threads;
 
             /**
                 Token to retrieve the next page of results in the list.

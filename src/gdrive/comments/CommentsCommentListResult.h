@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "comments"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -11,7 +13,7 @@
 
 namespace googleQt{
 namespace comments{
-    class CommentListResult{
+    class GOOGLEQT_DLLSPEC CommentListResult{
         /**
             field: next_page_token: The page token for the next page of
                 comments. This will be absent if the end of the comments list
@@ -27,6 +29,7 @@ namespace comments{
         CommentListResult(const QString& arg):
         m_kind("drive#commentList")
         { m_nextPageToken = arg; };
+        virtual ~CommentListResult(){};
 
     public:
             /**
@@ -40,7 +43,7 @@ namespace comments{
             */
         QString kind()const{return m_kind;};
 
-        const std::list <Comment>& comments()const{return m_comments;};
+        const std::vector<Comment>& comments()const{return m_comments;};
 
     public:
         operator QJsonObject ()const;
@@ -73,7 +76,7 @@ namespace comments{
             */
         QString m_kind;
 
-        std::list <Comment> m_comments;
+        std::vector<Comment> m_comments;
 
     };//CommentListResult
 

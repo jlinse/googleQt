@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "about"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -15,7 +17,7 @@ namespace googleQt{
 namespace about{
 
 
-    class AboutRoutes: public GoogleRouteBase{
+    class GOOGLEQT_DLLSPEC AboutRoutes: public GoogleRouteBase{
     public:
         AboutRoutes(Endpoint* ep):GoogleRouteBase(ep){};
             /**

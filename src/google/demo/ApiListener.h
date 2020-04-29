@@ -1,10 +1,11 @@
 #pragma once
 
 #include <QObject>
+#include "google/endpoint/ApiUtil.h"
 
 namespace googleQt{
     namespace demo{
-        class ApiListener: public QObject
+        class GOOGLEQT_DLLSPEC ApiListener: public QObject
         {
             Q_OBJECT
 

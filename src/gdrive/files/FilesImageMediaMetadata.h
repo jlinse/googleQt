@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "files"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -11,7 +13,7 @@
 
 namespace googleQt{
 namespace files{
-    class ImageMediaMetadata{
+    class GOOGLEQT_DLLSPEC ImageMediaMetadata{
         /**
             field: width: The width of the image in pixels.
             field: height: The height of the image in pixels.
@@ -46,6 +48,7 @@ namespace files{
         ImageMediaMetadata(){};
 
         ImageMediaMetadata(const quint64& arg){ m_width = arg; };
+        virtual ~ImageMediaMetadata(){};
 
     public:
             /**

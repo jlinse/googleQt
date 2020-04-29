@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "drafts"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -67,7 +69,7 @@ std::unique_ptr<DraftListRes> DraftListRes::EXAMPLE(int context_index, int paren
     static int example_idx = 0;
     example_idx++;
     std::unique_ptr<DraftListRes> rv(new DraftListRes);
-    std::list<drafts::DraftResource> list_of_drafts;
+    std::vector<drafts::DraftResource> list_of_drafts;
     for(int i = 0; i < 5; i++){
         drafts::DraftResource p = *(drafts::DraftResource::EXAMPLE(i, context_index).get());
         ApiAutotest::INSTANCE().prepareAutoTestObj("drafts::DraftListRes", "drafts::DraftResource", &p, i, context_index);

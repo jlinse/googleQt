@@ -1,6 +1,8 @@
 /**********************************************************
  DO NOT EDIT
  This file was generated from stone specification "attachments"
+ Part of "Ardi - the organizer" project.
+ osoft4ardi@gmail.com
  www.prokarpaty.net
 ***********************************************************/
 
@@ -15,7 +17,7 @@ namespace googleQt{
 namespace attachments{
 
 
-    class AttachmentsRoutes: public GoogleRouteBase{
+    class GOOGLEQT_DLLSPEC AttachmentsRoutes: public GoogleRouteBase{
     public:
         AttachmentsRoutes(Endpoint* ep):GoogleRouteBase(ep){};
             /**

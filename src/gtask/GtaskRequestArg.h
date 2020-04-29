@@ -3,7 +3,7 @@
 
 namespace googleQt {
     namespace gtask {
-        class TaskListIdArg : public QParamArg
+        class GOOGLEQT_DLLSPEC TaskListIdArg : public QParamArg
         {
         public:
             TaskListIdArg(QString tasklist_id = "");
@@ -23,7 +23,7 @@ namespace googleQt {
             QString m_tasklist;
         };
 
-        class TaskListContainerIdArg : public TaskListIdArg
+        class GOOGLEQT_DLLSPEC TaskListContainerIdArg : public TaskListIdArg
         {
         public:
             TaskListContainerIdArg(QString tasklist_id = "");
@@ -35,7 +35,7 @@ namespace googleQt {
         };
 
 
-        class TaskListClearArg : public TaskListIdArg
+        class GOOGLEQT_DLLSPEC TaskListClearArg : public TaskListIdArg
         {
         public:
             TaskListClearArg(QString tasklist_id = "");
@@ -46,7 +46,7 @@ namespace googleQt {
 #endif //API_QT_AUTOTEST
         };
 
-        class TaskIdArg : public TaskListIdArg 
+        class GOOGLEQT_DLLSPEC TaskIdArg : public TaskListIdArg
         {
         public:
             TaskIdArg();
@@ -69,7 +69,7 @@ namespace googleQt {
             QString m_task;
         };
         
-        class TaskInsertArg : public TaskListIdArg
+        class GOOGLEQT_DLLSPEC TaskInsertArg : public TaskListIdArg
         {
         public:
             TaskInsertArg();
@@ -98,7 +98,7 @@ namespace googleQt {
             QString  m_previous;
         };
 
-        class TaskMoveArg : public TaskIdArg
+        class GOOGLEQT_DLLSPEC TaskMoveArg : public TaskIdArg
         {
         public:
             TaskMoveArg();
@@ -129,7 +129,7 @@ namespace googleQt {
         };
         
 
-        class TaskListArg : public TaskListIdArg 
+        class GOOGLEQT_DLLSPEC TaskListArg : public TaskListIdArg
         {
         public:
 
@@ -212,7 +212,7 @@ namespace googleQt {
         };
 
 
-        class TasklistsListArg : public QParamArg
+        class GOOGLEQT_DLLSPEC TasklistsListArg : public QParamArg
         {
         public:
             TasklistsListArg();
