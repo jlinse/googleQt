@@ -5,9 +5,8 @@ import qbs.FileInfo
 Project {
     Product {
         name: "googleQt"
-        property bool dynamicBuild: true
+        property bool dynamicBuild: false
         type: dynamicBuild?"dynamiclibrary":"staticlibrary";
-        //type: "staticlibrary";
 
         Depends { name: "cpp" }
         Depends { name: "Qt.network" }
@@ -86,5 +85,18 @@ Project {
           qbs.installSourceBase: "../src/" //Preserve subdirectories.
         }
         qbs.installPrefix: ""
+
+        Export {
+          Depends { name: "cpp" }
+          Depends { name: "Qt.network" }
+          Depends { name: "Qt.xml" }
+          Depends { name: "Qt.sql" }
+          Depends { name: "Qt.gui" }
+          cpp.includePaths: [ product.sourceDirectory + "/../src" ]
+          prefixMapping: [{
+                        prefix: product.sourceDirectory,
+                        replacement: FileInfo.joinPaths(qbs.installPrefix+"/../src", "include")
+                }]
+        }
     }
 }
