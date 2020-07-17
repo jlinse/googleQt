@@ -335,7 +335,7 @@ namespace googleQt {
         };
     };
 
-    struct CaseInsensitiveLess : std::binary_function<std::string, std::string, bool>
+    struct CaseInsensitiveLess : std::function<bool(std::string, std::string)>
     {
         bool operator() (const QString & lhs, const QString & rhs) const {
             return std::lexicographical_compare(lhs.begin(),
