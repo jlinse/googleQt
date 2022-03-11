@@ -3095,7 +3095,7 @@ void mail_cache::GThreadsStorage::bindSQL(QSqlQuery* q, CACHE_LIST<ThreadData>& 
         history_id << t->m_history_id;
         messages_count << t->m_messages_count;
         snippet << t->m_snippet;
-        labelsBitMap << t->labelsBitMap();
+        labelsBitMap << QVariant::fromValue(t->labelsBitMap());
         internalDate << t->internalDate();
         id << t->m_id;
 
@@ -3117,7 +3117,7 @@ bool mail_cache::GThreadsStorage::execOutOfBatchSQL(QSqlQuery* q, mail_cache::Th
     q->addBindValue(t->m_history_id);
     q->addBindValue(t->m_messages_count);
     q->addBindValue(t->m_snippet);
-    q->addBindValue(t->labelsBitMap());
+    q->addBindValue(QVariant::fromValue(t->labelsBitMap()));
     q->addBindValue(t->internalDate());
     q->addBindValue(t->m_id);
     return q->exec();
