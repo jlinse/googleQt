@@ -92,7 +92,8 @@ Project {
           Depends { name: "Qt.xml" }
           Depends { name: "Qt.sql" }
           Depends { name: "Qt.gui" }
-          cpp.includePaths: [ "../src" ]
+          cpp.includePaths: [  FileInfo.joinPaths(exportingProduct.sourceDirectory, "..", "src") ];
+          //cpp.includePaths: [ "../src" ]
           prefixMapping: [{
                         prefix: product.sourceDirectory,
                         replacement: FileInfo.joinPaths(qbs.installPrefix+"/../src", "include")
