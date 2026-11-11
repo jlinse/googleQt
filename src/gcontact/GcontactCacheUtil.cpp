@@ -1,4 +1,4 @@
-#include <QXmlInputSource>
+#include <QXmlStreamReader>
 #include "GcontactCacheUtil.h"
 
 using namespace googleQt;
@@ -105,40 +105,14 @@ void ContactXmlPersistant::printXmlParseError(QString contextMsg,
         line_idx++;
     }        
     qWarning() << "-----------";
-    class MyXmlErrorHandler : public QXmlErrorHandler 
-    {
-    public:
-        bool error(const QXmlParseException & ex) override
-        {
-            reportError("error", ex);            
-            return false;
-        };
-        QString errorString() const override{ return ""; }
-        bool fatalError(const QXmlParseException & ex) override 
-        { 
-            reportError("fatal-error", ex);
-            return false; 
-        }
-        bool warning(const QXmlParseException & ex) override 
-        { 
-            reportError("warning", ex);
-            return true; 
-        }
-        void reportError(QString context, const QXmlParseException & ex) 
-        {
-            qWarning() << context << ex.message() 
-                << "line=" << ex.lineNumber() 
-                << "column=" << ex.columnNumber() 
-                << "publicId=" << ex.publicId()
-                << "systemId=" << ex.systemId();
-        }
-    } err_handler;
-
-    QXmlInputSource xml_source;
-    xml_source.setData(data);
-    QXmlSimpleReader r;
-    r.setErrorHandler(&err_handler);
-    r.parse(&xml_source);
+    QXmlStreamReader r(data);
+    while (!r.atEnd())
+        r.readNext();
+    if (r.hasError()) {
+        qWarning() << "error" << r.errorString()
+            << "line=" << r.lineNumber()
+            << "column=" << r.columnNumber();
+    }
     qWarning() << "-----------";
 }
 

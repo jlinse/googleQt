@@ -1,5 +1,6 @@
 #include <QFile>
 #include <QJsonParseError>
+#include <QRegularExpression>
 #include <QNetworkInterface>
 #include <functional>
 #include "ApiUtil.h"
@@ -161,7 +162,7 @@ QString googleQt::slist2commalist_decorated(const STRING_LIST& lst, char deco)
 
 STRING_LIST googleQt::split_string(QString s)
 {
-    QStringList s_list = s.split(" ", QString::SkipEmptyParts);
+    QStringList s_list = s.split(" ", Qt::SkipEmptyParts);
     STRING_LIST rv;
     for (QStringList::iterator i = s_list.begin(); i != s_list.end(); i++)
     {
@@ -188,7 +189,7 @@ QString googleQt::size_human(qreal num)
 
 QString googleQt::trim_alpha_label(QString lbl)
 {
-    QString rv = lbl.trimmed().toLower().remove(QRegExp("[^a-zA-Z\\d\\s]")).remove(QRegExp("\\s"));
+    QString rv = lbl.trimmed().toLower().remove(QRegularExpression("[^a-zA-Z\\d\\s]")).remove(QRegularExpression("\\s"));
     return rv;
 };
 

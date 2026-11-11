@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <ctime>
 #include <QDir>
+#include <QRegularExpression>
 #include "Endpoint.h"
 #include "GmailCacheRoutes.h"
 #include "gcontact/GcontactCache.h"
@@ -793,7 +794,7 @@ void mail_cache::GMailCacheQueryTask::fetchMessage(messages::MessageResource* m)
                         QByteArray payload_body = QByteArray::fromBase64(p.body().data(), QByteArray::Base64UrlEncoding);
                         html_text = payload_body.constData();
                         plain_text = html_text;
-                        plain_text.remove(QRegExp("<[^>]*>"));
+                        plain_text.remove(QRegularExpression("<[^>]*>"));
                     }
                 else
                     {
